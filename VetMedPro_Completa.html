@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VetMed Pro">
+<meta name="theme-color" content="#060f1e">
+<title>VetMed Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060f1e; --bg2:#0c1a2e; --bg3:#122038; --bg4:#1a2d4a;
+  --s1:rgba(255,255,255,0.04); --s2:rgba(255,255,255,0.08); --s3:rgba(255,255,255,0.13);
+  --b1:rgba(255,255,255,0.06); --b2:rgba(255,255,255,0.12); --b3:rgba(255,255,255,0.2);
+  --tx:#eef2ff; --tx2:#7e95be; --tx3:#445570;
+  --teal:#2dd4a0; --teal2:#0d9268; --tdim:rgba(45,212,160,0.12);
+  --red:#ff5777; --rdim:rgba(255,87,119,0.1);
+  --blue:#5b9cf6; --bdim:rgba(91,156,246,0.1);
+  --amber:#f5a623; --adim:rgba(245,166,35,0.1);
+  --purple:#a78bfa; --pdim:rgba(167,139,250,0.1);
+  --green:#4ade80; --gdim:rgba(74,222,128,0.1);
+  --coral:#fb923c; --cdim:rgba(251,146,60,0.1);
+  --fn:'DM Sans',sans-serif; --fs:'Playfair Display',serif; --fm:'DM Mono',monospace;
+  --r:14px; --rs:9px; --rx:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;}
+
+/* ── SCREENS ── */
+.scr{display:none;position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--bg);}
+.scr.on{display:block;}
+
+/* ── TOPBAR ── */
+.tb{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;padding-top:calc(env(safe-area-inset-top,0px)+14px);background:rgba(6,15,30,0.92);border-bottom:1px solid var(--b1);backdrop-filter:blur(20px);}
+.tb-logo{font-family:var(--fs);font-size:20px;color:var(--teal);}
+.tb-title{font-size:15px;font-weight:500;color:var(--tx);}
+.back{width:34px;height:34px;border-radius:50%;border:1px solid var(--b2);background:var(--s1);color:var(--tx);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.lang-btn{font-size:12px;padding:5px 11px;border-radius:20px;border:1px solid var(--b2);background:transparent;color:var(--tx2);cursor:pointer;font-family:var(--fn);}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:space-around;background:rgba(6,15,30,0.95);border-top:1px solid var(--b1);padding:8px 0;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));backdrop-filter:blur(20px);}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 12px;transition:transform .15s;}
+.ni:active{transform:scale(.9);}
+.ni-ic{font-size:20px;}
+.ni-lb{font-size:9px;color:var(--tx3);letter-spacing:.03em;}
+.ni.on .ni-lb{color:var(--teal);}
+
+/* ── COMMON ── */
+.pad{padding:16px 18px 100px;}
+.sec{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin:20px 0 10px;}
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s;}
+.card:active{transform:scale(.98);}
+.card:hover{border-color:var(--b2);}
+.chip-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;}
+.chip-row::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;padding:7px 13px;border-radius:50px;font-size:12px;cursor:pointer;border:1px solid var(--b2);background:transparent;color:var(--tx2);transition:all .15s;white-space:nowrap;}
+.chip:active{transform:scale(.95);}
+.chip.on{border-color:transparent;color:#000;}
+.tag{font-size:10px;padding:3px 8px;border-radius:20px;background:var(--s2);color:var(--tx2);}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.divider{border:none;border-top:1px solid var(--b1);margin:18px 0;}
+.badge{display:inline-block;font-size:10px;padding:3px 9px;border-radius:20px;font-weight:500;}
+.expand-body{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--b1);}
+.expand-body.open{display:block;}
+.point{display:flex;gap:8px;font-size:13px;color:var(--tx2);margin-bottom:7px;line-height:1.5;}
+.point::before{content:'—';color:var(--teal);flex-shrink:0;}
+.block{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px;margin-bottom:10px;}
+.blabel{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.mec{font-size:13px;color:var(--tx2);line-height:1.7;}
+.indic{display:flex;gap:7px;font-size:13px;color:var(--tx2);margin-bottom:6px;line-height:1.5;}
+.indic::before{content:'·';color:var(--teal);font-size:18px;line-height:.9;flex-shrink:0;}
+.alert-box{border-radius:var(--rs);padding:12px;margin-top:8px;}
+.alert-title{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
+.alert-text{font-size:12px;line-height:1.6;}
+
+/* ── TABS ── */
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--b1);}
+.tabs::-webkit-scrollbar{display:none;}
+.t-tab{flex-shrink:0;padding:12px 16px;font-size:13px;color:var(--tx3);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.t-tab.on{color:var(--teal);border-bottom-color:var(--teal);}
+
+/* ── DOSE GRID ── */
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.db{border-radius:var(--rs);padding:12px;}
+.dsp{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+.dval{font-size:13px;font-family:var(--fm);line-height:1.6;}
+.dvia{font-size:11px;margin-top:5px;opacity:.65;}
+
+/* ── REVISION TIMELINE ── */
+.rtl{position:relative;padding-left:18px;}
+.rtl::before{content:'';position:absolute;left:4px;top:6px;bottom:6px;width:1px;background:var(--b1);}
+.rstep{position:relative;margin-bottom:14px;}
+.rdot{position:absolute;left:-15px;top:4px;width:10px;height:10px;border-radius:50%;border:2px solid var(--bg);}
+.rwhen{font-size:11px;font-weight:500;font-family:var(--fm);margin-bottom:2px;}
+.rwhat{font-size:12px;color:var(--tx2);margin-bottom:5px;line-height:1.4;}
+.ritems{display:flex;flex-wrap:wrap;gap:5px;}
+
+/* ── EVAL / TEST ── */
+.prog-bar{height:3px;background:var(--b1);border-radius:2px;margin-bottom:20px;}
+.prog-fill{height:100%;border-radius:2px;background:var(--teal);transition:width .5s;}
+.q-type{display:inline-block;font-size:11px;padding:4px 11px;border-radius:20px;margin-bottom:12px;font-weight:500;}
+.question{font-size:16px;font-weight:500;line-height:1.5;margin-bottom:8px;}
+.ctx{font-size:13px;color:var(--tx2);line-height:1.6;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:13px;margin-bottom:18px;}
+.opts{display:flex;flex-direction:column;gap:9px;}
+.opt{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rs);padding:13px 14px;font-size:13px;cursor:pointer;text-align:left;font-family:var(--fn);color:var(--tx);display:flex;align-items:flex-start;gap:10px;transition:all .15s;}
+.opt:active{transform:scale(.98);}
+.opt.ok{background:rgba(45,212,160,.1);border-color:var(--teal);color:var(--teal);}
+.opt.ko{background:var(--rdim);border-color:var(--red);color:var(--red);}
+.opt.off{pointer-events:none;}
+.opt-l{width:24px;height:24px;border-radius:50%;background:var(--s2);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;font-family:var(--fm);flex-shrink:0;margin-top:1px;}
+.explain{background:rgba(45,212,160,.07);border:1px solid rgba(45,212,160,.2);border-radius:var(--rs);padding:13px;margin-top:14px;font-size:13px;color:#6ee7c0;line-height:1.6;display:none;}
+.next-btn{width:100%;background:var(--teal);border:none;border-radius:50px;padding:14px;font-size:14px;font-weight:600;color:#000;cursor:pointer;margin-top:16px;display:none;font-family:var(--fn);}
+.next-btn:active{transform:scale(.97);}
+
+/* ── ANESTHESIA CALC ── */
+.calc-box{background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+.calc-title{font-size:14px;font-weight:500;margin-bottom:12px;}
+.input-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.weight-input{flex:1;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rs);padding:10px 14px;font-size:18px;font-family:var(--fm);color:var(--teal);outline:none;text-align:center;}
+.weight-input:focus{border-color:var(--teal);}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.result-item{background:var(--bg3);border-radius:var(--rx);padding:10px;}
+.result-drug{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.result-dose{font-size:14px;font-family:var(--fm);color:var(--teal);font-weight:500;}
+.result-vol{font-size:11px;color:var(--tx2);margin-top:2px;}
+.result-via{font-size:10px;color:var(--tx3);margin-top:1px;}
+.asa-selector{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;}
+.asa-btn{flex-shrink:0;padding:7px 13px;border-radius:50px;font-size:12px;cursor:pointer;border:1px solid var(--b2);background:transparent;color:var(--tx2);transition:all .15s;font-family:var(--fn);}
+.asa-btn.on{background:var(--teal);color:#000;border-color:var(--teal);}
+
+/* ── SEARCH ── */
+.search-wrap{position:relative;margin-bottom:14px;}
+.search-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--tx3);}
+.search-in{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:50px;padding:11px 16px 11px 40px;font-size:14px;color:var(--tx);font-family:var(--fn);outline:none;}
+.search-in:focus{border-color:var(--teal);}
+.search-in::placeholder{color:var(--tx3);}
+
+/* ── HOME SPECIFIC ── */
+.home-hero{padding:20px 0 16px;}
+.home-title{font-family:var(--fs);font-size:26px;line-height:1.2;}
+.home-title em{color:var(--teal);font-style:normal;}
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mod-tile{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:15px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.mod-tile:active{transform:scale(.97);}
+.mod-em{font-size:26px;margin-bottom:9px;}
+.mod-name{font-size:13px;font-weight:500;margin-bottom:2px;}
+.mod-sub{font-size:11px;color:var(--tx2);}
+.prog-mini{height:2px;background:var(--b1);border-radius:1px;margin-top:10px;}
+.prog-mini-fill{height:100%;border-radius:1px;}
+.spec-scroll{display:flex;gap:9px;overflow-x:auto;padding-bottom:4px;}
+.spec-scroll::-webkit-scrollbar{display:none;}
+.spec-pill{flex-shrink:0;padding:9px 14px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .2s;}
+.spec-pill:active{transform:scale(.95);}
+
+/* ── URGENCIAS ── */
+.urg-hero{background:linear-gradient(135deg,rgba(255,87,119,.15),rgba(255,87,119,.03));border-bottom:1px solid rgba(255,87,119,.2);padding:20px 18px;}
+.urg-title{font-family:var(--fs);font-size:24px;color:var(--red);}
+.urg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 100px;}
+.urg-card{background:var(--s1);border:1px solid var(--b1);border-top:2px solid;border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s;}
+.urg-card:active{transform:scale(.97);}
+.proto-step{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;}
+.proto-num{width:30px;height:30px;border-radius:50%;background:var(--tdim);color:var(--teal);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--fm);}
+.proto-body{flex:1;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rs);padding:13px;}
+.proto-line{width:1px;height:10px;background:var(--b1);margin-left:14px;margin-bottom:2px;}
+.dosis-box{background:var(--tdim);border:1px solid rgba(45,212,160,.2);border-radius:var(--rx);padding:9px;margin-top:8px;}
+.dosis-lbl{font-size:10px;color:var(--teal);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.dosis-val{font-size:12px;font-family:var(--fm);color:var(--teal);line-height:1.6;}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:calc(env(safe-area-inset-top,0px)+68px);left:50%;transform:translateX(-50%) translateY(-8px);background:var(--teal);color:#000;border-radius:50px;padding:9px 18px;font-size:12px;font-weight:600;z-index:200;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none;}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── CASE FLOW ── */
+.cf-step{display:flex;gap:10px;margin-bottom:10px;}
+.cf-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;font-family:var(--fm);}
+.cf-body{flex:1;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;}
+.cf-lbl{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.cf-txt{font-size:13px;color:var(--tx);line-height:1.5;}
+.cf-line{width:1px;height:8px;background:var(--b1);margin-left:12px;margin-bottom:2px;}
+
+/* SPEC HERO */
+.spec-hero{padding:20px 18px 16px;border-bottom:1px solid var(--b1);}
+.spec-h-name{font-family:var(--fs);font-size:24px;}
+.spec-h-sub{font-size:13px;color:var(--tx2);margin-top:4px;}
+.spec-prog{height:3px;background:var(--b1);border-radius:2px;margin-top:14px;}
+.spec-prog-fill{height:100%;border-radius:2px;}
+
+/* DDx */
+.ddx-item{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px;margin-bottom:9px;}
+.ddx-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.ddx-name{font-size:14px;font-weight:500;}
+.ddx-pct{font-size:12px;font-family:var(--fm);}
+.ddx-bar{height:2px;background:var(--b1);border-radius:1px;margin-bottom:8px;}
+.ddx-fill{height:100%;border-radius:1px;}
+.ddx-info{font-size:12px;color:var(--tx2);line-height:1.5;}
+
+/* PROG SCREEN */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;}
+.stat-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rs);padding:13px;text-align:center;}
+.stat-v{font-size:22px;font-weight:600;font-family:var(--fm);color:var(--teal);}
+.stat-l{font-size:10px;color:var(--tx3);margin-top:3px;text-transform:uppercase;letter-spacing:.05em;}
+.ps-row{display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rs);padding:13px;margin-bottom:8px;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════
+  SPLASH
+══════════════════════════════════════ -->
+<div id="s-splash" class="scr on">
+  <div style="min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 30px;">
+    <div style="width:90px;height:90px;background:linear-gradient(135deg,#0d9268,#2dd4a0);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:46px;margin-bottom:24px;box-shadow:0 0 50px rgba(45,212,160,.3)">🩺</div>
+    <div style="font-family:var(--fs);font-size:34px;color:var(--tx);margin-bottom:6px;">VetMed Pro</div>
+    <div style="font-size:13px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:48px;">Clinical Excellence</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:16px;">Selecciona idioma · Choose language</div>
+    <div style="display:flex;gap:12px;">
+      <button onclick="startApp('es')" style="padding:13px 36px;border-radius:50px;background:var(--teal);border:none;font-size:15px;font-weight:600;color:#000;cursor:pointer;font-family:var(--fn);">Español</button>
+      <button onclick="startApp('en')" style="padding:13px 36px;border-radius:50px;background:var(--s2);border:1px solid var(--b2);font-size:15px;font-weight:500;color:var(--tx);cursor:pointer;font-family:var(--fn);">English</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  HOME
+══════════════════════════════════════ -->
+<div id="s-home" class="scr">
+  <div class="tb"><div class="tb-logo">VetMed Pro</div><button class="lang-btn" id="lang-toggle" onclick="toggleLang()">EN</button></div>
+  <div class="pad">
+    <div class="home-hero">
+      <div style="font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px" id="h-greet">Buenos días</div>
+      <div class="home-title" id="h-title">Tu compañero<br>de <em>clínica diaria</em></div>
+    </div>
+
+    <div class="sec" id="h-sec-spec">Especialidades</div>
+    <div class="spec-scroll" id="spec-scroll"></div>
+
+    <div class="sec" id="h-sec-mod">Módulos principales</div>
+    <div class="mod-grid">
+      <div class="mod-tile" style="border-color:rgba(255,87,119,.18)" onclick="go('s-urgencias')">
+        <div class="mod-em">🚨</div>
+        <div class="mod-name" id="m-urg">Urgencias</div>
+        <div class="mod-sub" id="m-urg-s">Protocolos de actuación</div>
+        <div class="prog-mini"><div class="prog-mini-fill" style="width:15%;background:var(--red)"></div></div>
+      </div>
+      <div class="mod-tile" style="border-color:rgba(167,139,250,.18)" onclick="go('s-anestesia')">
+        <div class="mod-em">💉</div>
+        <div class="mod-name" id="m-ane">Anestesia</div>
+        <div class="mod-sub" id="m-ane-s">Protocolos y calculadora</div>
+        <div class="prog-mini"><div class="prog-mini-fill" style="width:5%;background:var(--purple)"></div></div>
+      </div>
+      <div class="mod-tile" style="border-color:rgba(91,156,246,.18)" onclick="go('s-anatomia')">
+        <div class="mod-em">🫀</div>
+        <div class="mod-name" id="m-anat">Anatomía</div>
+        <div class="mod-sub" id="m-anat-s">Sistemas y ejes hormonales</div>
+        <div class="prog-mini"><div class="prog-mini-fill" style="width:30%;background:var(--blue)"></div></div>
+      </div>
+      <div class="mod-tile" style="border-color:rgba(45,212,160,.18)" onclick="go('s-vadecumum')">
+        <div class="mod-em">💊</div>
+        <div class="mod-name" id="m-vad">Vademécum</div>
+        <div class="mod-sub" id="m-vad-s">Fármacos y posología</div>
+        <div class="prog-mini"><div class="prog-mini-fill" style="width:20%;background:var(--teal)"></div></div>
+      </div>
+      <div class="mod-tile" style="border-color:rgba(245,166,35,.18)" onclick="go('s-ddx')">
+        <div class="mod-em">🔍</div>
+        <div class="mod-name" id="m-ddx">Diagnóstico</div>
+        <div class="mod-sub" id="m-ddx-s">Motor de DDx</div>
+        <div class="prog-mini"><div class="prog-mini-fill" style="width:10%;background:var(--amber)"></div></div>
+      </div>
+      <div class="mod-tile" style="border-color:rgba(45,212,160,.18)" onclick="go('s-progreso')">
+        <div class="mod-em">📊</div>
+        <div class="mod-name" id="m-prog">Progreso</div>
+        <div class="mod-sub" id="m-prog-s">Ruta hasta enero 2027</div>
+        <div class="prog-mini"><div class="prog-mini-fill" style="width:16%;background:var(--teal)"></div></div>
+      </div>
+    </div>
+
+    <div class="sec" id="h-sec-test">Tests rápidos</div>
+    <div class="card" onclick="startTest('actuacion')">
+      <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">🗺️</span><div style="font-size:14px;font-weight:500" id="t1-title">¿Cómo actuarías?</div></div><span style="color:var(--tx3)">›</span></div>
+      <div style="font-size:12px;color:var(--tx2);margin-top:5px" id="t1-sub">Casos clínicos con toma de decisiones paso a paso</div>
+    </div>
+    <div class="card" onclick="startTest('analitica')">
+      <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">📋</span><div style="font-size:14px;font-weight:500" id="t2-title">Interpreta la analítica</div></div><span style="color:var(--tx3)">›</span></div>
+      <div style="font-size:12px;color:var(--tx2);margin-top:5px" id="t2-sub">Hemograma y bioquímica: reconoce el patrón</div>
+    </div>
+    <div class="card" onclick="startTest('imagen')">
+      <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">🩻</span><div style="font-size:14px;font-weight:500" id="t3-title">RX · Eco · Imagen</div></div><span style="color:var(--tx3)">›</span></div>
+      <div style="font-size:12px;color:var(--tx2);margin-top:5px" id="t3-sub">Hallazgos radiológicos y ecográficos</div>
+    </div>
+    <div class="card" onclick="startTest('farma')">
+      <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">💊</span><div style="font-size:14px;font-weight:500" id="t4-title">Fármacos y dosis</div></div><span style="color:var(--tx3)">›</span></div>
+      <div style="font-size:12px;color:var(--tx2);margin-top:5px" id="t4-sub">Dosis, contraindicaciones y seguimiento</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  ESPECIALIDAD (generic)
+══════════════════════════════════════ -->
+<div id="s-spec" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title" id="spec-tb"></div><div></div></div>
+  <div class="spec-hero" id="spec-hero"></div>
+  <div class="tabs" id="spec-tabs">
+    <div class="t-tab on" onclick="specTab('contenido',this)">Contenido</div>
+    <div class="t-tab" onclick="specTab('ddx',this)">DDx</div>
+    <div class="t-tab" onclick="specTab('farmacos',this)">Fármacos</div>
+    <div class="t-tab" onclick="specTab('tests',this)">Tests</div>
+  </div>
+  <div class="pad" id="spec-body"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+  URGENCIAS
+══════════════════════════════════════ -->
+<div id="s-urgencias" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title" style="color:var(--red)" id="urg-tb">🚨 Urgencias</div><div></div></div>
+  <div class="urg-hero">
+    <div class="urg-title" id="urg-title">Urgencias</div>
+    <div style="font-size:13px;color:var(--tx2);margin-top:4px" id="urg-sub">Protocolos de actuación inmediata</div>
+    <div style="background:var(--rdim);border:1px solid rgba(255,87,119,.2);border-radius:var(--rs);padding:11px;margin-top:12px;font-size:12px;color:#ff8fa3;line-height:1.5" id="urg-warn">⚠️ Herramienta de aprendizaje. Aplica siempre tu criterio clínico.</div>
+  </div>
+  <div class="urg-grid" id="urg-grid"></div>
+</div>
+
+<!-- PROTOCOLO -->
+<div id="s-proto" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-urgencias')">‹</button><div class="tb-title" id="proto-tb"></div><div></div></div>
+  <div class="pad" id="proto-body"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+  ANESTESIA
+══════════════════════════════════════ -->
+<div id="s-anestesia" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title" id="ane-tb">💉 Anestesia</div><div></div></div>
+  <div class="tabs" id="ane-tabs">
+    <div class="t-tab on" onclick="aneTab('calc',this)">Calculadora</div>
+    <div class="t-tab" onclick="aneTab('protocolos',this)">Protocolos</div>
+    <div class="t-tab" onclick="aneTab('monitor',this)">Monitorización</div>
+    <div class="t-tab" onclick="aneTab('complicaciones',this)">Complicaciones</div>
+    <div class="t-tab" onclick="aneTab('ci',this)">Contraindicaciones</div>
+  </div>
+  <div class="pad" id="ane-body"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+  ANATOMÍA
+══════════════════════════════════════ -->
+<div id="s-anatomia" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title" id="anat-tb">Anatomía & Fisiología</div><div></div></div>
+  <div class="pad" id="anat-body"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+  VADEMÉCUM
+══════════════════════════════════════ -->
+<div id="s-vadecumum" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title" id="vad-tb">💊 Vademécum</div><div></div></div>
+  <div style="padding:14px 18px 0">
+    <div class="search-wrap"><span class="search-ic">🔍</span><input class="search-in" id="vad-search" placeholder="Vetmedin, furosemida, Nolotil..." oninput="vadSearch(this.value)"></div>
+    <div class="chip-row" id="vad-chips"></div>
+  </div>
+  <div style="padding:0 18px 100px" id="vad-list"></div>
+</div>
+
+<!-- FÁRMACO DETAIL -->
+<div id="s-drug" class="scr">
+  <div class="tb"><button class="back" id="drug-back" onclick="go('s-vadecumum')">‹</button><div class="tb-title" id="drug-tb"></div><button style="font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid rgba(45,212,160,.3);background:transparent;color:var(--teal);cursor:pointer;font-family:var(--fn)" onclick="evalDrug()">Evalúate ↗</button></div>
+  <div id="drug-hero"></div>
+  <div class="tabs">
+    <div class="t-tab on" onclick="drugTab('ficha',this)">Ficha</div>
+    <div class="t-tab" onclick="drugTab('dosis',this)">Dosis</div>
+    <div class="t-tab" onclick="drugTab('revision',this)">Revisión</div>
+    <div class="t-tab" onclick="drugTab('contexto',this)">Contexto clínico</div>
+  </div>
+  <div class="pad" id="drug-body"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+  DDx
+══════════════════════════════════════ -->
+<div id="s-ddx" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title" id="ddx-tb">Motor DDx</div><div></div></div>
+  <div class="pad">
+    <input class="search-in" id="ddx-search" style="padding-left:16px;margin-bottom:14px" placeholder="Escribe síntoma..." oninput="ddxSearch(this.value)">
+    <div class="sec" id="ddx-sec">Síntomas frecuentes</div>
+    <div class="chip-row" id="ddx-chips" style="margin-bottom:16px"></div>
+    <div id="ddx-results"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  TEST
+══════════════════════════════════════ -->
+<div id="s-test" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title" id="test-tb">Test</div><div style="font-size:11px;color:var(--tx3)" id="test-count"></div></div>
+  <div class="pad">
+    <div class="prog-bar"><div class="prog-fill" id="test-prog"></div></div>
+    <div id="test-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  PROGRESO
+══════════════════════════════════════ -->
+<div id="s-progreso" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title" id="prog-tb">Mi Progreso</div><div></div></div>
+  <div class="pad" id="prog-body"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav" id="bnav" style="display:none">
+  <div class="ni on" onclick="go('s-home')" id="ni-0"><div class="ni-ic">🏠</div><div class="ni-lb" id="nl-0">Inicio</div></div>
+  <div class="ni" onclick="go('s-urgencias')" id="ni-1"><div class="ni-ic">🚨</div><div class="ni-lb" id="nl-1">Urgencias</div></div>
+  <div class="ni" onclick="go('s-anestesia')" id="ni-2"><div class="ni-ic">💉</div><div class="ni-lb" id="nl-2">Anestesia</div></div>
+  <div class="ni" onclick="go('s-ddx')" id="ni-3"><div class="ni-ic">🔍</div><div class="ni-lb" id="nl-3">DDx</div></div>
+  <div class="ni" onclick="go('s-vadecumum')" id="ni-4"><div class="ni-ic">💊</div><div class="ni-lb" id="nl-4">Fármacos</div></div>
+</nav>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let L = 'es';
+let curSpec = null;
+let curDrug = null;
+let testType = '';
+let testIdx = 0;
+let testAnswered = false;
+let testQuestions = [];
+let aneSection = 'calc';
+let anePeso = 10;
+let aneASA = 1;
+let vadClass = 'all';
+let ddxActive = [];
+
+// ═══════════════════════════════════════
+//  i18n
+// ═══════════════════════════════════════
+const TXT = {
+  es:{
+    greet:'Buenos días', title:'Tu compañero\nde clínica diaria',
+    secSpec:'Especialidades', secMod:'Módulos principales', secTest:'Tests rápidos',
+    mUrg:'Urgencias', mUrgS:'Protocolos de actuación',
+    mAne:'Anestesia', mAneS:'Protocolos y calculadora',
+    mAnat:'Anatomía', mAnatS:'Sistemas y ejes hormonales',
+    mVad:'Vademécum', mVadS:'Fármacos y posología',
+    mDdx:'Diagnóstico', mDdxS:'Motor de DDx',
+    mProg:'Progreso', mProgS:'Ruta hasta enero 2027',
+    t1:'¿Cómo actuarías?', t1s:'Casos clínicos con toma de decisiones paso a paso',
+    t2:'Interpreta la analítica', t2s:'Hemograma y bioquímica: reconoce el patrón',
+    t3:'RX · Eco · Imagen', t3s:'Hallazgos radiológicos y ecográficos',
+    t4:'Fármacos y dosis', t4s:'Dosis, contraindicaciones y seguimiento',
+    nl:['Inicio','Urgencias','Anestesia','DDx','Fármacos'],
+    urgTitle:'Urgencias', urgSub:'Protocolos de actuación inmediata',
+    urgWarn:'⚠️ Herramienta de aprendizaje. Aplica siempre tu criterio clínico.',
+    aneTb:'💉 Anestesia', anatTb:'Anatomía & Fisiología',
+    vadTb:'💊 Vademécum', ddxTb:'Motor DDx', progTb:'Mi Progreso',
+    ddxSec:'Síntomas frecuentes',
+    calcTitle:'Calculadora de dosis anestésica', calcLabel:'Peso del paciente (kg)',
+    calcSpecies:'Especie', asa:'Clasificación ASA',
+    specTabs:['Contenido','DDx','Fármacos','Tests'],
+    aneTabs:['Calculadora','Protocolos','Monitorización','Complicaciones','Contraindicaciones'],
+  },
+  en:{
+    greet:'Good morning', title:'Your daily\nclinical companion',
+    secSpec:'Specialties', secMod:'Main modules', secTest:'Quick tests',
+    mUrg:'Emergencies', mUrgS:'Action protocols',
+    mAne:'Anaesthesia', mAneS:'Protocols & calculator',
+    mAnat:'Anatomy', mAnatS:'Systems & hormonal axes',
+    mVad:'Formulary', mVadS:'Drugs & dosages',
+    mDdx:'Diagnosis', mDdxS:'DDx engine',
+    mProg:'Progress', mProgS:'Road to January 2027',
+    t1:'What would you do?', t1s:'Step-by-step clinical cases with decision making',
+    t2:'Interpret the bloodwork', t2s:'CBC and biochemistry: recognise the pattern',
+    t3:'X-ray · Echo · Imaging', t3s:'Radiological and ecographic findings',
+    t4:'Drugs & doses', t4s:'Dosing, contraindications and follow-up',
+    nl:['Home','Emergency','Anaesthesia','DDx','Drugs'],
+    urgTitle:'Emergencies', urgSub:'Immediate action protocols',
+    urgWarn:'⚠️ Learning tool. Always apply your clinical judgment.',
+    aneTb:'💉 Anaesthesia', anatTb:'Anatomy & Physiology',
+    vadTb:'💊 Formulary', ddxTb:'DDx Engine', progTb:'My Progress',
+    ddxSec:'Common symptoms',
+    calcTitle:'Anaesthetic dose calculator', calcLabel:'Patient weight (kg)',
+    calcSpecies:'Species', asa:'ASA classification',
+    specTabs:['Content','DDx','Drugs','Tests'],
+    aneTabs:['Calculator','Protocols','Monitoring','Complications','Contraindications'],
+  }
+};
+const t = k => TXT[L][k] || k;
+
+// ═══════════════════════════════════════
+//  DATA — ESPECIALIDADES
+// ═══════════════════════════════════════
+const SPECS = [
+  { id:'derma', em:'🔬', color:'var(--teal)', dot:'#2dd4a0',
+    es:{name:'Dermatología',sub:'Piel, pelo y uñas',prog:55,
+      contenido:[
+        {title:'Enfoque diagnóstico dermatológico',desc:'Lesiones primarias, secundarias y distribución',expand:['Lesiones primarias: mácula, pápula, pústula, vesícula, nódulo, habón','Lesiones secundarias: costra, escama, úlcera, hiperpigmentación, liquenificación','Distribución es clave: prurito facial/pies = atopia; sacrolumbar = pulga; generalizado = seborrhea','Siempre describir: distribución, simetría, grado de prurito (0-10)']},
+        {title:'Alergias: DAP, AA, DAPP',desc:'Diferenciación y manejo de las tres alergias más frecuentes',expand:['DAP (Dermatitis Atópica Perro): prurito estacional → perenne. Cara, pies, axilas, ingles. IgE elevada.','DAPP: distribución sacrolumbar, dorso cola. Signo de la pulga positivo. Tratamiento: control pulga','AA (Alergia Alimentaria): no estacional, no responde corticoides. Exclusión 8 semanas con proteína única','Diagnóstico de DAP: criterios de Favrot (≥5 criterios = 85% sensibilidad)']},
+        {title:'Citología cutánea',desc:'Técnica e interpretación práctica',expand:['Métodos: impronta directa, cinta adhesiva, raspado, aspirado con aguja fina','Tinción Diff-Quick: cocos (Staphylococcus) > 1-2/campo = significativo','Malassezia: > 2 levaduras/campo en zonas predispuestas (oído, pliegues, interdigital)','Neutrófilos degenerados = infección bacteriana activa','Células acantolíticas sin bacterias → pénfigo foliáceo']},
+      ],
+      ddx:[
+        {name:'Pioderma superficial',prob:72,color:'#2dd4a0',info:'Cocos en citología, collaretes, costras. ATB 3-4 semanas. Buscar causa primaria.'},
+        {name:'Malassezia dermatitis',prob:65,color:'#5b9cf6',info:'Prurito, olor rancio, eritema intertriginoso. Citología diagnóstica. Antifúngico azólico.'},
+        {name:'Dermatitis atópica',prob:60,color:'#a78bfa',info:'Joven, raza predispuesta, prurito crónico. Diagnóstico de exclusión. Oclacitinib, lokivetmab.'},
+        {name:'Sarna sarcóptica',prob:45,color:'#f5a623',info:'Prurito intensísimo, bordes pabellones auriculares. Raspado negativo no descarta. Prueba terapéutica.'},
+        {name:'Alergia alimentaria',prob:40,color:'#fb923c',info:'Sin estacionalidad, no responde corticoides. Exclusión 8 semanas con proteína hidrolizada.'},
+      ],
+      farmacos:['oclacitinib','prednisolona','cefalexina']},
+    en:{name:'Dermatology',sub:'Skin, coat and nails',prog:55,
+      contenido:[
+        {title:'Dermatological diagnostic approach',desc:'Primary, secondary lesions and distribution',expand:['Primary lesions: macule, papule, pustule, vesicle, nodule, wheal','Secondary lesions: crust, scale, ulcer, hyperpigmentation, lichenification','Distribution is key: facial/paw pruritus = atopy; sacrolumbar = flea; generalised = seborrhoea','Always describe: distribution, symmetry, pruritus degree (0-10)']},
+      ],
+      ddx:[
+        {name:'Superficial pyoderma',prob:72,color:'#2dd4a0',info:'Cocci on cytology, epidermal collarettes. Antibiotics 3-4 weeks. Find primary cause.'},
+        {name:'Malassezia dermatitis',prob:65,color:'#5b9cf6',info:'Pruritus, rancid odour, intertriginous erythema. Cytology diagnostic. Azole antifungal.'},
+        {name:'Atopic dermatitis',prob:60,color:'#a78bfa',info:'Young, predisposed breed, chronic pruritus. Diagnosis of exclusion. Oclacitinib, lokivetmab.'},
+      ],
+      farmacos:['oclacitinib','prednisolona','cefalexina']}
+  },
+  { id:'cardio', em:'❤️', color:'var(--red)', dot:'#ff5777',
+    es:{name:'Cardiología',sub:'Soplos, arritmias e ICC',prog:20,
+      contenido:[
+        {title:'Auscultación y clasificación de soplos',desc:'Grados I-VI, timing, localización y PMI',expand:['Grado I-II: sólo con estetoscopio especializado, sin thrill','Grado III-IV: fácilmente audibles, thrill en IV','Grado V-VI: audibles sin estetoscopio, thrill prominente','Sistólico mitral → MMVD (perro pequeño >5 años). Sistólico aórtico → Estenosis Aórtica','Continuo (maquinaria) → PDA. Diastólico → regurgitación aórtica (raro)']},
+        {title:'ICC y estadificación ACVIM',desc:'Estadios A→B1→B2→C→D y criterios de tratamiento',expand:['Estadio A: riesgo sin enfermedad. B1: soplo sin cardiomegalia. B2: soplo + cardiomegalia','Criterios B2 para iniciar pimobendan: VHS >10.5 O RVLA/Ao >1.6 O AI/Ao >1.4','Estadio C: ICC activa, edema pulmonar. Inicio: pimobendan + furosemida + IECA','Estadio D: refractario. Añadir: espironolactona, aumentar furosemida, considerar torasemida']},
+        {title:'ECG básico veterinario',desc:'Ritmo, frecuencia, ejes y patrones comunes',expand:['Derivación II para ritmo. FC perro: 60-180 lpm. Gato: 100-240 lpm','FA: sin ondas P definidas, intervalos RR irregulares → frecuente en Labrador/Golden con MMVD avanzado','BAV 2º grado Mobitz II: algunas P sin QRS → digoxina, vagotomía','BAV completo: disociación P-QRS, ritmo de escape lento → marcapasos','BLBBB: QRS >80ms perro, patrón M en derivaciones izquierdas → DCM']},
+      ],
+      ddx:[
+        {name:'MMVD (Mixomatosa mitral)',prob:80,color:'#ff5777',info:'Soplo sistólico mitral, perro pequeño/mediano >5 años. Más frecuente cardiopatía canina (75%).'},
+        {name:'HCM felina',prob:75,color:'#a78bfa',info:'Gato >5 años, soplo variable o galope S4. Ecocardiografía obligatoria. Riesgo FATE.'},
+        {name:'DCM canina',prob:40,color:'#f5a623',info:'Razas grandes: Dobermann, Boxer, Dálmata. Soplo suave/ausente. Arritmias ventriculares.'},
+        {name:'PDA',prob:30,color:'#5b9cf6',info:'Perro joven, soplo continuo maquinaria. Cierre mediante cateterismo o cirugía.'},
+      ],
+      farmacos:['pimobendan','furosemida','benazepril','espironolactona']},
+    en:{name:'Cardiology',sub:'Murmurs, arrhythmias and CHF',prog:20,
+      contenido:[
+        {title:'Murmur auscultation and grading',desc:'Grades I-VI, timing, location and PMI',expand:['Grade I-II: only with specialist stethoscope, no thrill','Grade III-IV: easily audible, thrill at IV','Systolic mitral → MMVD (small dog >5 years). Continuous (machinery) → PDA']},
+      ],
+      ddx:[
+        {name:'MMVD (Myxomatous mitral)',prob:80,color:'#ff5777',info:'Systolic mitral murmur, small/medium dog >5 years. Most common canine heart disease (75%).'},
+        {name:'Feline HCM',prob:75,color:'#a78bfa',info:'Cat >5 years, variable murmur or S4 gallop. Echocardiography mandatory. FATE risk.'},
+      ],
+      farmacos:['pimobendan','furosemida','benazepril']}
+  },
+  { id:'neuro', em:'🧠', color:'var(--purple)', dot:'#a78bfa',
+    es:{name:'Neurología',sub:'SNC, SNP y localización de lesiones',prog:10,
+      contenido:[
+        {title:'Examen neurológico sistemático',desc:'Estado mental, postura, marcha, reacciones posturales y reflejos',expand:['1. Estado mental: alerta, deprimido, obnubilado, estuporoso, comatoso','2. Postura: head tilt (vestibular), tortícolis, Schiff-Sherrington (lesión T2-L4)','3. Marcha: ataxia propioceptiva, vestibular (tambaleante), cerebelosa (hipermetría)','4. Reacciones posturales: propioceptive placing, hopping, wheel-barrow','5. Reflejos: patelar (L4-L6), flexor anterior (C6-T2), flexor posterior (L6-S1), perineal (S1-S3)']},
+        {title:'Localización de la lesión',desc:'NMS vs NMI y los 5 grandes segmentos',expand:['NMS (neurona motora superior): hiperreflexia, hipertonía, paresia espástica','NMI (neurona motora inferior): hiporreflexia, hipotonía, atrofia neurógena rápida','C1-C5: tetraparesia NMS. C6-T2: miembros ant NMI + post NMS','T3-L3: paraparesia NMS. L4-S2: paraparesia NMI','Lesión cerebelosa: ataxia + dismetría, SIN paresia']},
+      ],
+      ddx:[
+        {name:'IVDD Hansen tipo I',prob:75,color:'#a78bfa',info:'Condrodistróficas, dolor agudo, paresia. TC/RM. Cirugía si déficit neurológico >24h.'},
+        {name:'Epilepsia idiopática',prob:65,color:'#5b9cf6',info:'2-6 años, razas predispuestas. Examen y analítica normales. Fenobarbital o imepitoin.'},
+        {name:'Meningoencefalitis inmunomediada',prob:30,color:'#ff5777',info:'MUE: raza pequeña, adulto-joven. LCR anormal. Inmunosupresión (prednisolona ± citarabina).'},
+      ],
+      farmacos:['fenobarbital','imepitoin','diazepam','prednisolona']},
+    en:{name:'Neurology',sub:'CNS, PNS and lesion localisation',prog:10,
+      contenido:[{title:'Systematic neurological exam',desc:'Mentation, posture, gait, postural reactions and reflexes',expand:['1. Mentation: alert, depressed, obtunded, stuporous, comatose','2. Posture: head tilt (vestibular), torticollis','3. Gait: proprioceptive ataxia, vestibular, cerebellar (hypermetria)','NMS: hyperreflexia, hypertonia. LMN: hyporeflexia, hypotonia, rapid neurogenic atrophy']}],
+      ddx:[{name:'IVDD Hansen type I',prob:75,color:'#a78bfa',info:'Chondrodystrophic breeds, acute pain, paresis. CT/MRI. Surgery if neurological deficits >24h.'}],
+      farmacos:['fenobarbital','diazepam']}
+  },
+  { id:'endo', em:'⚗️', color:'var(--amber)', dot:'#f5a623',
+    es:{name:'Endocrinología',sub:'Ejes hormonales y metabolismo',prog:40,
+      contenido:[
+        {title:'Eje HPT: hipotálamo-pituitaria-tiroides',desc:'Regulación, hipotiroidismo canino, hipertiroidismo felino',expand:['TRH(hipotálamo) → TSH(hipófisis) → T3/T4(tiroides). Retroalimentación negativa','T4 es el 90% circulante; se convierte en T3 activo en tejidos periféricos','HIPOTIROIDISMO CANINO: T4↓ + TSH↑. Letargia, aumento de peso, dermatopatía, bradicardia','HIPERTIROIDISMO FELINO: T4↑, nódulo tiroideo. Pérdida peso, polifagia, taquicardia, HTA','Trampas: enfermedades no tiroideas bajan T4 falsamente (euthyroid sick syndrome)']},
+        {title:'Eje HPA: hipotálamo-pituitaria-adrenal',desc:'HAC canino: PDH vs FAD, diagnóstico y tratamiento',expand:['CRH → ACTH → Cortisol. Retroalimentación negativa','PDH (80-85%): adenoma hipofisario bilateral. FAD (15-20%): tumor adrenal unilateral','Screening: cociente cortisol/creatinina orina >10x = positivo','Confirmación: test estimulación ACTH (cortisol post >600 nmol/L)','Distinción PDH/FAD: supresión dexametasona dosis alta + ecografía adrenal','Tratamiento: trilostane (inhibidor) o mitotane (citotóxico adrenal)']},
+      ],
+      ddx:[
+        {name:'HAC (Cushing)',prob:70,color:'#f5a623',info:'PU/PD, polifagia, abdomen péndulo, alopecia bilateral. FA muy elevada. Test ACTH.'},
+        {name:'Hipertiroidismo felino',prob:85,color:'#a78bfa',info:'Gato >8 años. T4 elevada, nódulo tiroideo. Pérdida de peso. Metimazol.'},
+        {name:'Hipotiroidismo canino',prob:70,color:'#5b9cf6',info:'Letargia, obesidad, dermatopatía. T4 total + TSH. Levotiroxina.'},
+        {name:'Diabetes mellitus',prob:60,color:'#4ade80',info:'PU/PD, glucosa >200 persistente, glucosuria. Insulina. Dieta.'},
+      ],
+      farmacos:['trilostane','metimazol','levotiroxina','insulina']},
+    en:{name:'Endocrinology',sub:'Hormonal axes and metabolism',prog:40,
+      contenido:[{title:'HPT axis',desc:'Regulation, canine hypothyroidism, feline hyperthyroidism',expand:['TRH(hypothalamus) → TSH(pituitary) → T3/T4(thyroid). Negative feedback','Canine hypothyroidism: T4↓ + TSH↑. Lethargy, weight gain, dermatopathy','Feline hyperthyroidism: T4↑, thyroid nodule. Weight loss, polyphagia, tachycardia, HTN']}],
+      ddx:[{name:'HAC (Cushing)',prob:70,color:'#f5a623',info:'PU/PD, polyphagia, pot belly, bilateral alopecia. Very high ALP. ACTH test.'}],
+      farmacos:['trilostane','metimazol']}
+  },
+  { id:'loco', em:'🦴', color:'var(--coral)', dot:'#fb923c',
+    es:{name:'Locomotor',sub:'Cojeras, articulaciones y huesos',prog:45,
+      contenido:[
+        {title:'Evaluación sistemática de la cojera',desc:'Observación, palpación y pruebas específicas',expand:['1. Observación en estación: atrofia muscular, postura articular, simetría','2. Trote: cabeza baja al apoyar → cojera anterior. Crestas ilíacas asimétricas → cojera posterior','3. Palpación: calor, derrame articular, crepitación','4. Rango de movimiento: limitación/dolor = artrosis; bloqueo = fragmento OC; hiperlaxitud = rotura ligamentosa','5. Pruebas específicas: cajón craneal + tibial thrust (LCA), Ortolani (displasia cadera), Barlow (codo)']},
+      ],
+      ddx:[
+        {name:'Rotura LCA',prob:70,color:'#fb923c',info:'Cajón craneal positivo. Derrame articular. Perro mediano/grande. TPLO o TTA.'},
+        {name:'Displasia de codo',prob:55,color:'#5b9cf6',info:'Joven, raza grande. Cojera anterior. TC confirma FCP/OCD/UAP. Artroscopia terapéutica.'},
+        {name:'Displasia de cadera',prob:50,color:'#f5a623',info:'Bilateral, razas predispuestas. Ángulo Norberg <105°. FHO, THR o manejo médico.'},
+        {name:'Osteosarcoma',prob:20,color:'#ff5777',info:'>5 años, raza grande, dolor nocturno insidioso. RX: lesión lítica con halo esclerótico. Amputación + quimio.'},
+      ],
+      farmacos:['meloxicam','carprofeno','gabapentina']},
+    en:{name:'Locomotor',sub:'Lameness, joints and bones',prog:45,
+      contenido:[{title:'Systematic lameness evaluation',desc:'Observation, palpation and specific tests',expand:['1. Standing observation: muscle atrophy, joint posture','2. Trot: head drops = forelimb lameness. Asymmetric pelvic rise = hindlimb','3. Specific tests: cranial drawer + tibial thrust (CCL), Ortolani (hip dysplasia)']}],
+      ddx:[{name:'CCL rupture',prob:70,color:'#fb923c',info:'Positive cranial drawer. Joint effusion. Medium/large dog. TPLO or TTA.'}],
+      farmacos:['meloxicam','gabapentina']}
+  },
+];
+
+// ═══════════════════════════════════════
+//  DATA — URGENCIAS
+// ═══════════════════════════════════════
+const URGENCIAS = {
+  es:[
+    {id:'shock',em:'💉',name:'Shock hipovolémico',lv:'Crítico',color:'#ff5777',steps:[
+      {t:'ABC inicial',tx:'Vía aérea permeable. Respiración: FR, tipo, esfuerzo. Circulación: FC, TRC, color y humedad mucosas, calidad de pulso. Tiempo de llenado capilar >2s = comprometido.',dosis:null},
+      {t:'Acceso venoso y muestras',tx:'Catéter IV 18-20G perro / 22G gato. Dos accesos si posible. Extraer sangre para hemograma urgente, bioquímica, lactato, grupo y Rh.',dosis:null},
+      {t:'Fluidoterapia de resucitación',tx:'Cristaloides isotónicos: NaCl 0.9% o Ringer Lactato. Bolus shock. Evaluar TRC/FC/PA tras cada bolus. Objetivo: TRC <2s, FC normal, mucosas rosadas.',dosis:'🐕 Perro: 10–20 ml/kg IV en 10–15 min\n🐈 Gato: 5–10 ml/kg IV en 10–15 min\nColoides: 3–5 ml/kg si no responde\nMáximo acumulado: 90 ml/kg/h perro'},
+      {t:'Monitorización continua',tx:'FC, FR, TRC, temperatura rectal, PA sistólica (objetivo >80 mmHg), diuresis (>0.5 ml/kg/h), SpO2. Repetir cada 5-10 min.',dosis:null},
+      {t:'Tratar causa subyacente',tx:'Hemorragia activa: transfusión, presión, cirugía urgente. Vómitos/diarrea severos: antiemético IV. Sepsis: antibiótico de amplio espectro IV urgente.',dosis:null},
+    ]},
+    {id:'obstruccion',em:'🐱',name:'Obstrucción urinaria felina',lv:'Urgente',color:'#f5a623',steps:[
+      {t:'Reconocimiento urgente',tx:'Gato macho en postura de micción sin producir orina, vocalización, depresión progresiva, vómitos. Vejiga grande, tensa y dolorosa a la palpación. NO intentar expresión manual forzada.',dosis:null},
+      {t:'Estabilización y analítica urgente',tx:'Acceso IV inmediato. Fluidoterapia. K+ es crítico — hiperkaliemia puede ser fatal. Monitorizar ECG si K+ >6.5 mEq/L (ondas T altas, PR prolongado, QRS ancho).',dosis:'NaCl 0.9%: 10 ml/kg IV bolus\nSi K+ >7: Gluconato cálcico 50–100 mg/kg IV lento (cardioprotector)\nBicarbonato sódico si acidosis severa'},
+      {t:'Analgesia antes de manipulación',tx:'Buprenorfina IV o IM. Si estable: butorfanol IM. Sedación para sondaje: combinación ketamina baja dosis + butorfanol IM. El dolor y estrés empeoran la hiperkaliemia.',dosis:'Buprenorfina: 0.02 mg/kg IV/IM\nButorfanol: 0.2–0.4 mg/kg IM\nKetamina: 2–4 mg/kg IM (sedación leve)'},
+      {t:'Sondaje uretral',tx:'Sonda 3.5–5 Fr, lubricar con lidocaína gel. Retropulsión suave con NaCl estéril. Si no pasa: cistocéntesis de alivio (<15 ml) para descomprimir. Nunca forzar el sondaje.',dosis:'Lidocaína gel tópico uretral\nNaCl estéril para retropulsión'},
+      {t:'Hospitalización y control',tx:'Diuresis post-obstructiva abundante: reponer con 1.5× mantenimiento. Electrolitos cada 4–6h. Retirar sonda a las 24–48h. Alta con dieta húmeda, acidificante, y control en 7 días.',dosis:'Mantenimiento: 2–3 ml/kg/h\nAjustar a la diuresis (puede ser 6–10 ml/kg/h las primeras horas)'},
+    ]},
+    {id:'gvd',em:'🐶',name:'Dilatación-vólvulo gástrico',lv:'Crítico',color:'#ff5777',steps:[
+      {t:'Reconocimiento',tx:'Perro raza grande/gigante. Distensión abdominal aguda, timpanismo, intentos infructuosos de vomitar, hipersalivación, inquietud progresiva → colapso. Sin tratar: muerte en horas.',dosis:null},
+      {t:'Estabilización urgente',tx:'2 catéteres IV grueso calibre (16-18G) venas cefálicas. Fluidoterapia agresiva. Analgesia opioide IV inmediata. Muestras para analítica (lactato es pronóstico: >6 mmol/L = mal pronóstico).',dosis:'NaCl 0.9%: 20 ml/kg IV en 10 min, repetir\nMetadona: 0.3–0.5 mg/kg IV lento\nMorfina: 0.1–0.3 mg/kg IV lento'},
+      {t:'Descompresión gástrica',tx:'Si colapso inminente: trocarización percutánea flanco derecho con aguja 14-16G. Si estable: sonda gástrica (anestesia leve) sonda 30-36 Fr, posición lateral, suave rotación. Lavado gástrico.',dosis:null},
+      {t:'Cirugía urgente',tx:'Una vez mínimamente estabilizado (30–60 min máx). GASTROPEXIA DE PERMANENCIA obligatoria. Evaluar viabilidad pared gástrica (necrosis → gastrectomía parcial). Pronóstico: mortalidad 10–50% según demora.',dosis:null},
+    ]},
+    {id:'status',em:'⚡',name:'Status epilepticus',lv:'Crítico',color:'#ff5777',steps:[
+      {t:'Proteger y cronometrar',tx:'Área segura, oscura, silenciosa. NO objetos en boca. Cronometrar convulsión. STATUS = convulsión >5 min O ≥2 convulsiones sin recuperación consciencia.',dosis:null},
+      {t:'Primera línea: benzodiacepinas',tx:'Diazepam IV si acceso. Si no: midazolam intranasal o IM (absorción excelente). Puede repetirse hasta 3 veces con 5 min de intervalo.',dosis:'Diazepam IV: 0.5–1 mg/kg IV lento (>1 min)\nMidazolam intranasal: 0.2–0.5 mg/kg (dividir en 2 fosas)\nMidazolam IM: 0.2–0.3 mg/kg\n⚠️ Diazepam VO en GATO → hepatotoxicidad'},
+      {t:'Segunda línea',tx:'Si no cede con 2 dosis de benzodiacepina: fenobarbital IV. En gato preferir levetiracetam IV (mejor perfil seguridad).',dosis:'Fenobarbital: 2–4 mg/kg IV lento cada 20 min (máx 20 mg/kg/24h)\nLevetiracetam: 30–60 mg/kg IV en 15 min'},
+      {t:'Soporte y analítica urgente',tx:'Temperatura rectal: enfriar si >41°C (hipotermia activa). Glucemia: dextrosa si <70 mg/dl. SpO2, oxígeno suplementario. Lactato. Tóxicos si sospecha.',dosis:'Dextrosa 50%: 0.5 ml/kg IV diluida al 25%\nO2: 1–3 L/min mascarilla'},
+      {t:'Tercera línea: anestesia general',tx:'Status refractario: propofol CRI o pentobarbital IV. UCI. Buscar causa: tóxico, metabólico (hepático, hipoglucemia), estructural (encefalitis, neoplasia), idiopático.',dosis:'Propofol: 1–4 mg/kg IV, luego CRI 0.1–0.6 mg/kg/min\nKetamina: 0.5–1 mg/kg IV si refractario (propiedades antiepilépticas)'},
+    ]},
+    {id:'dispnea',em:'🫁',name:'Disnea aguda felina',lv:'Urgente',color:'#f5a623',steps:[
+      {t:'MÍNIMO ESTRÉS — crítico',tx:'NO forzar examen. Gato en posición cómoda, O2 en cámara o flujo libre. La manipulación puede ser fatal. Observar desde lejos: postura (ortopnea=cardíaco, cabeza extendida=traqueal), tipo respiratorio (costal=pleural, abdominal=diafragmático).',dosis:'O2 flujo libre: 100–200 ml/kg/min\nCámara O2: FiO2 30–40%'},
+      {t:'Auscultación rápida y POCUS',tx:'Auscultación 30 seg: crepitantes ventrales (edema pulmonar), matidez (efusión pleural), sibilancias (asma). POCUS torácico: imagen "swirling" = efusión. Ausencia sliding sign = neumotórax.',dosis:null},
+      {t:'Tratamiento según causa',tx:'EFUSIÓN PLEURAL → toracocentesis diagnóstico-terapéutica bilateral (espacio intercostal 7-9, borde craneal costilla). EDEMA PULMONAR cardiogénico → furosemida IV. ASMA → broncodilatador + corticoides. NEUMOTÓRAX → drenaje.',dosis:'Furosemida: 1–2 mg/kg IV (edema)\nTerbutalina: 0.01 mg/kg SC (broncoespasmo)\nDexametasona: 0.1–0.2 mg/kg IV (asma)\nButorfanol: 0.2 mg/kg IM (reducir ansiedad respiratoria)'},
+    ]},
+    {id:'intox',em:'☠️',name:'Intoxicación aguda',lv:'Urgente',color:'#f5a623',steps:[
+      {t:'Identificar tóxico y tiempo',tx:'¿Qué ingirió? ¿Cuándo? ¿Cuánto? Guardar etiqueta. Principales: AINES humanos (ibuprofeno), paracetamol (GATO, mortal), uvas/pasas, xilitol, permetrina (GATO), raticidas anticoagulantes, metaldehído, chocolate.',dosis:null},
+      {t:'Descontaminación (<2h post-ingesta)',tx:'Solo si paciente consciente, sin convulsiones, sin causticos. Perro: apomorfina o H2O2 3%. Gato: medetomidina IM (más seguro). NUNCA en corrosivos, espumantes, derivados petróleo, depresión SNC.',dosis:'Apomorfina: 0.03 mg/kg IV / 0.04 mg/kg IM (perro)\nH2O2 3%: 1–2 ml/kg VO perro (máx 45 ml)\nMedetomidina: 40 μg/kg IM gato (inducir vómito)'},
+      {t:'Carbón activado',tx:'Adsorbe tóxicos orgánicos. NO eficaz: metales pesados, etanol, xilitol, causticos. Dar con catártico. Puede repetirse si circulación enterohepática (warfarina, AINES).',dosis:'Carbón activado: 1–4 g/kg VO (suspensión 1g/5ml)\nSorbitol 70% como catártico: 3 ml/kg VO'},
+      {t:'Antídotos específicos',tx:'Según tóxico identificado. Soporte hemodinámico + monitorización orgánica.',dosis:'N-acetilcisteína (paracetamol): 140 mg/kg IV carga, luego 70 mg/kg/6h×7 dosis\nVit K1 (raticidas): 1.5–2.5 mg/kg SC/VO\nAtropina (organofosfatos): 0.04–0.5 mg/kg IV (titular)\nIntralipid 20% (perm/locales): 1.5 ml/kg IV bolus'},
+    ]},
+  ],
+  en:[
+    {id:'shock',em:'💉',name:'Hypovolemic shock',lv:'Critical',color:'#ff5777',steps:[
+      {t:'ABC assessment',tx:'Patent airway. Breathing: rate, type, effort. Circulation: HR, CRT, mucosa colour and moisture, pulse quality. CRT >2s = compromised.',dosis:null},
+      {t:'IV access and samples',tx:'IV catheter 18-20G dog / 22G cat. Two lines if possible. Blood for urgent CBC, biochemistry, lactate, blood type.',dosis:null},
+      {t:'Fluid resuscitation',tx:'Isotonic crystalloids: 0.9% NaCl or Lactated Ringer. Shock bolus. Reassess CRT/HR/BP after each bolus. Goals: CRT <2s, normal HR, pink mucosas.',dosis:'🐕 Dog: 10–20 ml/kg IV over 10–15 min\n🐈 Cat: 5–10 ml/kg IV over 10–15 min\nColloids: 3–5 ml/kg if unresponsive'},
+    ]},
+  ]
+};
+
+// ═══════════════════════════════════════
+//  DATA — ANESTESIA
+// ═══════════════════════════════════════
+const ANE_PROTOCOLS = {
+  es:{
+    premeds:{
+      title:'Premedicaciones por ASA',
+      asa:[
+        {asa:1,label:'ASA I — Sano',color:'#4ade80',desc:'Paciente sin enfermedad sistémica detectable. Sin riesgo adicional.',
+          combos:[
+            {name:'Estándar (perro)',drugs:[{d:'Dexmedetomidina',dose:'5–10 μg/kg',via:'IM'},{d:'Metadona',dose:'0.3 mg/kg',via:'IM'},{d:'Butorfanol',dose:'0.2 mg/kg',via:'IM'}]},
+            {name:'Estándar (gato)',drugs:[{d:'Dexmedetomidina',dose:'10–20 μg/kg',via:'IM'},{d:'Butorfanol',dose:'0.4 mg/kg',via:'IM'}]},
+          ]},
+        {asa:2,label:'ASA II — Enfermedad leve',color:'#2dd4a0',desc:'Enfermedad sistémica leve sin limitación funcional. Ejemplos: obesidad moderada, cardiopatía compensada B1.',
+          combos:[
+            {name:'Reducido (perro)',drugs:[{d:'Dexmedetomidina',dose:'3–5 μg/kg',via:'IM'},{d:'Metadona',dose:'0.2–0.3 mg/kg',via:'IM'}]},
+            {name:'Reducido (gato)',drugs:[{d:'Dexmedetomidina',dose:'5–10 μg/kg',via:'IM'},{d:'Butorfanol',dose:'0.2–0.3 mg/kg',via:'IM'}]},
+          ]},
+        {asa:3,label:'ASA III — Enfermedad moderada',color:'#f5a623',desc:'Limitación funcional. Ejemplos: ICC compensada (B2), hipertiroidismo felino no estabilizado, diabetes.',
+          combos:[
+            {name:'Conservador',drugs:[{d:'Butorfanol o Buprenorfina',dose:'0.2–0.4 / 0.02 mg/kg',via:'IM'},{d:'Acepromazina EVITAR',dose:'—',via:'Hipotensión severa'}]},
+          ]},
+        {asa:4,label:'ASA IV — Riesgo vital',color:'#ff5777',desc:'Amenaza constante a la vida. ICC descompensada, obstrucción urinaria con uremia, GVD, politraumatismo.',
+          combos:[
+            {name:'Mínimo',drugs:[{d:'Fentanilo',dose:'2–5 μg/kg',via:'IV lento'},{d:'Midazolam',dose:'0.1–0.2 mg/kg',via:'IV'},{d:'Ketamina baja dosis',dose:'1–2 mg/kg',via:'IV si necesario'}]},
+          ]},
+      ]},
+    induccion:{
+      title:'Inducción anestésica',
+      agentes:[
+        {name:'Propofol',dose:'2–6 mg/kg IV (perro) / 4–8 mg/kg IV (gato)',desc:'Inducción suave, recuperación rápida. Apnea dosis-dependiente. No en cardiopatía severa (hipotensión). Titulación obligatoria.',color:'#5b9cf6'},
+        {name:'Alfaxalona',dose:'2–3 mg/kg IV (perro) / 3–5 mg/kg IV (gato)',desc:'Excelente en gato. Más estable cardiovascularmente que propofol. Recuperación excitada en perro si no premedicado.',color:'#2dd4a0'},
+        {name:'Ketamina',dose:'2–5 mg/kg IV / 5–10 mg/kg IM',desc:'Mantiene FC y PA (simpaticomimético). CONTRAINDICADA en HCM felina, epilepsia, hipertensión. SIEMPRE combinar con benzodiacepina o alfa2.',color:'#f5a623'},
+        {name:'Etomidato',dose:'1–2 mg/kg IV',desc:'Mínima depresión cardiovascular. Elección en cardiopatía severa ASA IV. Inhibe cortisol transitoriamente. Disponibilidad limitada.',color:'#a78bfa'},
+      ]},
+    mantenimiento:{
+      title:'Mantenimiento anestésico',
+      agentes:[
+        {name:'Isoflurano',desc:'CAM perro: 1.3%. CAM gato: 1.6%. Depresor cardiovascular y respiratorio dosis-dependiente. Metabolismo mínimo (<0.2%). Gold standard.',color:'#5b9cf6'},
+        {name:'Sevoflurano',desc:'CAM perro: 2.3%. CAM gato: 2.58%. Inducción y recuperación más rápida. Más caro. Elección en braquicéfalos y pacientes con hepatopatía.',color:'#2dd4a0'},
+        {name:'Propofol CRI',desc:'0.1–0.4 mg/kg/min IV. Total IV (TIVA). Sin contaminación aérea. Recuperación predecible. Acumulación en infusiones largas.',color:'#a78bfa'},
+      ]},
+    monitor:{
+      title:'Monitorización anestésica',
+      params:[
+        {p:'Frecuencia cardíaca',normal:'Perro 60–120 lpm · Gato 80–150 lpm',alarm:'<50 o >180 → intervenir',color:'#ff5777'},
+        {p:'Presión arterial (PANI)',normal:'PAS >90 mmHg · PAM >65 mmHg',alarm:'PAM <60 mmHg → hipotensión → fluidoterapia, reducir halogenado, vasopresores',color:'#f5a623'},
+        {p:'SpO2',normal:'>98% con O2 suplementario',alarm:'<95% → revisar vía aérea, ventilación, FiO2',color:'#5b9cf6'},
+        {p:'ETCO2 (capnografía)',normal:'35–45 mmHg',alarm:'<35: hiperventilación. >55: hipoventilación → ajustar ventilación',color:'#2dd4a0'},
+        {p:'Temperatura rectal',normal:'37.5–39°C',alarm:'<36°C → manta térmica, fluidos templados. >40°C → hipoxia, malignant hyperthermia',color:'#a78bfa'},
+        {p:'Plano anestésico',normal:'Globo ocular central, reflejos corneales presentes',alarm:'Globo ventral + ausencia corneal = demasiado profundo',color:'#fb923c'},
+      ]},
+    complicaciones:{
+      title:'Manejo de complicaciones',
+      items:[
+        {name:'Hipotensión (PAM <60 mmHg)',color:'#ff5777',steps:['Reducir 10-20% el halogenado','Bolus cristaloides 5-10 ml/kg','Si persiste: dopamina 5-10 μg/kg/min IV o noradrenalina 0.1-0.5 μg/kg/min','Descartar: profundidad excesiva, neumotórax, hemorragia']},
+        {name:'Bradicardia sintomática (<50 lpm)',color:'#f5a623',steps:['Comprobar plano anestésico (profundidad → bradicardia vagal)','Atropina 0.02–0.04 mg/kg IV/IM','Si asociada a alfa2: atipamezol 0.1 mg/kg IM (antídoto dexmedetomidina)','Glicopirrolato 0.005–0.01 mg/kg IV (duración más larga)']},
+        {name:'Apnea post-inducción',color:'#a78bfa',steps:['Ventilación manual inmediata con Ambu o circuito','Intubar si no estaba intubado','Revisar dosis de inducción (¿sobredosis?)','Flumazenil si benzodiacepina involucrada: 0.01 mg/kg IV']},
+        {name:'Regurgitación/aspiración',color:'#fb923c',steps:['Cabeza abajo, aspirar orofaringe','Lavado bronquial con NaCl estéril si aspiración confirmada','Antibioterapia profiláctica: amoxicilina-clavulánico','Nebulización post-operatoria, fisioterapia respiratoria']},
+        {name:'Hipotermia (<36°C)',color:'#5b9cf6',steps:['Manta de aire caliente o circulante (NO botellas agua caliente directas)','Fluidos templados (38°C)','Cubrir extremidades y cabeza','Objetivo: temperatura normal antes de extubación']},
+      ]},
+    ci:{
+      title:'Contraindicaciones y precauciones',
+      items:[
+        {name:'Ketamina',ci:['HCM felina (aumenta FC y obstrucción TSVI)','Epilepsia (umbral convulsivo reducido)','Hipertensión severa no controlada','Glaucoma (aumenta PIO)'],prec:['Siempre combinar con alfa2 o BZD','Hepatopatía severa: reducir dosis']},
+        {name:'Acepromazina',ci:['Shock hipovolémico o hemorrágico (hipotensión irreversible)','Epilepsia (reduce umbral)','Obstrucción urinaria (relajación esfínter)','Braquicéfalo con colapso laríngeo'],prec:['Razas gigantes: dosis máxima 0.05 mg/kg','Boxers: sensibles → 0.01–0.02 mg/kg']},
+        {name:'AINEs perioperatorios',ci:['Hipotensión intraoperatoria (nefrotoxicidad)','IRC conocida o deshidratación','Coagulopatías','Animales en tratamiento corticoideo (combinar → úlcera GI)'],prec:['Administrar DESPUÉS de estabilizar PA','Control renal 24–48h post-cirugía en gato']},
+        {name:'Alfa2 agonistas (dexmedetomidina)',ci:['ICC descompensada (estadio C/D)','Bradiarritmias significativas','Bloqueo AV 2º-3º grado','Hipotensión'],prec:['ASA III: reducir dosis 50%','Siempre tener atipamezol disponible como antídoto']},
+        {name:'Propofol en gato',ci:['Uso repetido >3 días (anemia hemolítica Heinz)','Hipoalbuminemia severa (unión proteínas)'],prec:['Titulación obligatoria','No usar como mantenimiento prolongado sin alternativa']},
+      ]}
+  }
+};
+
+// ═══════════════════════════════════════
+//  DATA — FÁRMACOS
+// ═══════════════════════════════════════
+const DRUGS = [
+  {id:'pimobendan',name:'Pimobendan',brand:'Vetmedin · Cardisure',cls:'cardio',clsLabel:'Cardioprotector',dot:'#ff5777',
+    mec:'Inotrópico positivo (sensibilizador calcio + inhibidor PDE III) y vasodilatador arterio-venoso. Mejora contracción sin aumentar consumo O₂ miocárdico. Diferencia clave frente a digoxina.',
+    indic:['ICC por MMVD estadio C y D','MMVD estadio B2 (VHS>10.5 O RVLA/Ao>1.6)','DCM canina','Off-label: ICC felina sin obstrucción TSVI'],
+    dosis:{dog:{val:'0.2–0.3 mg/kg/12h VO',via:'⚠️ 1h ANTES de comer (comida reduce absorción 40%)'},cat:{val:'0.625 mg/gato/12h (off-label)',via:'VO · monitorizar obstrucción TSVI en HCM'}},
+    alerta:{t:'warning',tx:'Contraindicado en estenosis aórtica/subaórtica. En HCM felina con obstrucción TSVI puede empeorar gradiente. Ecocardiografía siempre antes de iniciar en gato.'},
+    rev:[{when:'2 sem',col:'#2dd4a0',what:'Tolerancia y respuesta inicial',items:['FC en reposo','Tos, disnea, tolerancia al ejercicio','Peso corporal']},{when:'4–8 sem',col:'#5b9cf6',what:'Respuesta estructural',items:['Eco: AI/Ao, FS%','RX tórax: silueta cardíaca','Electrolitos']},{when:'Cada 3–6 meses',col:'#a78bfa',what:'Control crónico',items:['Ecocardiografía','Analítica completa','Estadio ACVIM']}],
+    ctx:'Cardiopatía / ICC',ctxD:'Primera línea en MMVD estadio B2 y C. Protocolo ACVIM 2019. Estadio C: pimobendan + furosemida + IECA. Estadio D: añadir espironolactona, considerar torasemida.'
+  },
+  {id:'furosemida',name:'Furosemida',brand:'Seguril · Dimazon · Lasix',cls:'cardio',clsLabel:'Diurético de asa',dot:'#ff5777',
+    mec:'Inhibidor cotransportador Na⁺/K⁺/2Cl⁻ en asa de Henle. Diuresis potente y rápida (IV: 5 min). Vasodilatación venosa directa que reduce precarga.',
+    indic:['Edema pulmonar cardiogénico agudo','ICC estadio C y D','Ascitis por ICC derecha'],
+    dosis:{dog:{val:'Urgencia: 2–4 mg/kg IV/IM\nMantenimiento: 1–2 mg/kg/8-12h VO\nCRI: 0.66 mg/kg/h',via:'IV urgencia · VO mantenimiento'},cat:{val:'Urgencia: 1–2 mg/kg IV\nMantenimiento: 0.5–1 mg/kg/12-24h VO',via:'IV con precaución · VO mantenimiento'}},
+    alerta:{t:'danger',tx:'⚠️ Hipokaliemia potencia arritmias y toxicidad de digoxina. Monitorizar K⁺ siempre. Usar mínima dosis eficaz. Ototoxicidad a dosis IV alta rápida.'},
+    rev:[{when:'48–72h (urgencia)',col:'#ff5777',what:'Post-crisis',items:['FR reposo <30 rpm (perro)','RX tórax','Peso','K⁺, Na⁺, creatinina']},{when:'2–4 semanas',col:'#f5a623',what:'Mantenimiento',items:['Electrolitos','Función renal','Deshidratación']},{when:'Cada 3 meses',col:'#a78bfa',what:'Crónico',items:['Analítica','PA','Dosis mínima eficaz']}],
+    ctx:'Cardiología',ctxD:'Primera línea en edema pulmonar. Combinar con pimobendan e IECA en ICC crónica. Espironolactona potencia efecto y protege de hipokaliemia.'
+  },
+  {id:'diazepam',name:'Diazepam',brand:'Valium · Stesolid rectal',cls:'neuro',clsLabel:'Benzodiacepina',dot:'#a78bfa',
+    mec:'Potenciador GABA-A (aumenta frecuencia apertura canal Cl⁻). Anticonvulsivante rápido IV (1-3 min). Duración corta (20–30 min) — no previene recurrencia.',
+    indic:['Status epilepticus — 1ª línea IV','Convulsión activa sin acceso IV (rectal)','Sedación combinada','Espasmos musculares'],
+    dosis:{dog:{val:'Convulsión IV: 0.5–1 mg/kg IV lento\nRectal: 0.5–2 mg/kg\nSedación: 0.2–0.5 mg/kg IV',via:'IV lento (>1 min) · Rectal sin acceso\nMáx 3 dosis con intervalo 5 min'},cat:{val:'IV: 0.25–0.5 mg/kg IV puntual\n⚠️ NUNCA VO crónico',via:'Solo IV en urgencias puntuales'}},
+    alerta:{t:'danger',tx:'🔴 GATO: Diazepam oral o repetido → hepatopatía idiosincrásica fulminante. Alternativa en gato: midazolam intranasal/IM (mucho más seguro).'},
+    rev:[{when:'Post-status (24h)',col:'#a78bfa',what:'Control neurológico y hepático',items:['Consciencia y recuperación','ALT/FA si gato','Temperatura','Glucemia']},{when:'Si uso crónico (2 sem)',col:'#5b9cf6',what:'Transición a crónico',items:['Función hepática en perro','Valorar fenobarbital o imepitoin']}],
+    ctx:'Neurología / Urgencias',ctxD:'Primera línea en status. Vida media corta → seguir con fenobarbital IV si persiste. En casa: midazolam bucal o intranasal.'
+  },
+  {id:'midazolam',name:'Midazolam',brand:'Dormicum · Midazolam B.Braun',cls:'neuro',clsLabel:'Benzodiacepina',dot:'#a78bfa',
+    mec:'Benzodiacepina hidrosoluble. Permite vía intranasal y IM con buena absorción (sin propilenglicol). Inicio intranasal: 2–3 min.',
+    indic:['Status sin acceso IV — 1ª línea alternativa','Premedicación anestésica','Sedación combinada'],
+    dosis:{dog:{val:'IM/intranasal: 0.2–0.5 mg/kg\nIV: 0.1–0.3 mg/kg',via:'Intranasal: dividir entre ambas fosas\nBucal: alternativa para propietarios'},cat:{val:'IM/intranasal: 0.2–0.3 mg/kg',via:'Preferido sobre diazepam IV en gato'}},
+    alerta:{t:'info',tx:'Mejor opción que diazepam cuando no hay acceso IV. Gato: seguro por vía IM e intranasal sin riesgo de hepatotoxicidad.'},
+    rev:[{when:'Post-administración',col:'#a78bfa',what:'Control inmediato',items:['Sedación excesiva','FC y FR','Respuesta a estimulación']}],
+    ctx:'Urgencias / Anestesia',ctxD:'Primera opción en status sin acceso IV. Para propietarios con epilépticos conocidos: entrenamiento en midazolam intranasal domiciliario.'
+  },
+  {id:'metamizol',name:'Metamizol (Dipirona)',brand:'Nolotil · Metalgial · Vetalgin',cls:'analgesico',clsLabel:'Analgésico/Antipirético',dot:'#5b9cf6',
+    mec:'Inhibición COX-3 central + activación sistema opioide endógeno + espasmolítico en músculo liso. Excelente en dolor visceral. Sin efecto antiagregante significativo.',
+    indic:['Dolor visceral: cólico, espasmos GI/GU','Fiebre refractaria','Analgesia multimodal postoperatoria'],
+    dosis:{dog:{val:'25–35 mg/kg/8-12h VO\n20–25 mg/kg IV (diluido, lento)',via:'VO preferida · IV solo hospitalización\nDiluir 1:10 en SF, infundir >3 min'},cat:{val:'25 mg/kg/12h VO\nUso cauteloso',via:'VO · Evitar IRC o hepatopatía'}},
+    alerta:{t:'danger',tx:'⚠️ PROHIBIDO en UK, USA, Canadá. Aprobado en España/Europa. IV rápido → hipotensión grave. Gato: metabolismo limitado, duración corta.'},
+    rev:[{when:'5–7 días (crónico)',col:'#5b9cf6',what:'Control hematológico',items:['Hemograma (neutropenia)','Función renal/hepática','Transición a AINE convencional']}],
+    ctx:'Analgesia / Urgencias',ctxD:'Muy útil en dolor cólico y postoperatorio. Combina bien con meloxicam (mecanismos diferentes). En urgencias: alternativa si riesgo GI o plaquetario.'
+  },
+  {id:'meloxicam',name:'Meloxicam',brand:'Metacam · Loxicom · Rheumocam',cls:'analgesico',clsLabel:'AINE COX-2',dot:'#5b9cf6',
+    mec:'AINE COX-2 preferente. Inhibe prostaglandinas proinflamatorias. Menor toxicidad GI y plaquetaria que AINEs no selectivos.',
+    indic:['Dolor musculoesquelético crónico y agudo','Postoperatorio','Artritis y artrosis','Analgesia preventiva'],
+    dosis:{dog:{val:'Día 1: 0.2 mg/kg SC/VO\nDía 2+: 0.1 mg/kg/24h VO',via:'VO con comida · SC primera dosis'},cat:{val:'Dosis única: 0.1–0.3 mg/kg SC\nVO: 0.05 mg/kg/24h (máx 5 días off-label)',via:'⚠️ Solo dosis única SC aprobada'}},
+    alerta:{t:'warning',tx:'No combinar con corticoides (washout 5-7 días) ni otros AINEs. Contraindicado en IRC, hepatopatía severa, coagulopatías, deshidratación.'},
+    rev:[{when:'2–4 semanas',col:'#5b9cf6',what:'Control AINE crónico',items:['BUN, creatinina, SDMA','ALT, FA','Signos GI']},{when:'Cada 3–6 meses',col:'#a78bfa',what:'Revisión periódica',items:['Analítica completa','Dosis mínima eficaz','Condroprotectores como coadyuvantes']}],
+    ctx:'Locomotor / Analgesia',ctxD:'Gold standard artrosis canina. Gato: uso muy limitado y supervisado. Protocolo multimodal: meloxicam + gabapentina en dolor crónico severo.'
+  },
+  {id:'trilostane',name:'Trilostane',brand:'Vetoryl',cls:'hormonal',clsLabel:'Inhibidor adrenal',dot:'#f5a623',
+    mec:'Inhibidor competitivo de 3β-HSD adrenal. Bloquea síntesis de cortisol (y aldosterona). Efecto reversible, no citotóxico. Duración 10–18h.',
+    indic:['HAC PDH — 80-85% de casos','HAC FAD funcionante','Control pre-adrenalectomía'],
+    dosis:{dog:{val:'Inicio: 1–2 mg/kg/24h VO\nAjuste: 2–5 mg/kg/24h\nAlgunos: dividir en /12h',via:'⚠️ SIEMPRE con comida (absorción errática sin ella)'},cat:{val:'Off-label: 10–30 mg/gato/24h',via:'VO con comida · Monitorización estrecha'}},
+    alerta:{t:'danger',tx:'🔴 CONTROL OBLIGATORIO 10–14 días: test ACTH. Cortisol post <20 nmol/L → suspender + corticoides. Riesgo Addison iatrogénico: vómitos, letargia, hipotensión. NO iniciar sin diagnóstico confirmado.'},
+    rev:[{when:'10–14 días ⚠️',col:'#ff5777',what:'OBLIGATORIO — test ACTH',items:['Cortisol post-ACTH (obj: 40–138 nmol/L)','Electrolitos Na⁺/K⁺','Signos clínicos']},{when:'4–6 sem',col:'#f5a623',what:'Ajuste de dosis',items:['Test ACTH + ajuste','Analítica completa']},{when:'Cada 3 meses',col:'#a78bfa',what:'Control crónico',items:['Test ACTH','Eco si FAD']}],
+    ctx:'Endocrinología',ctxD:'Tratamiento médico de elección HAC. Alternativa: mitotane (más tóxico). Distinguir PDH de FAD con eco adrenal y test DEXA alta dosis antes de iniciar.'
+  },
+  {id:'metimazol',name:'Metimazol',brand:'Felimazole · Thyrozol',cls:'hormonal',clsLabel:'Antitiroideos',dot:'#f5a623',
+    mec:'Inhibe peroxidasa tiroidea: bloquea síntesis T3/T4. Efecto reversible. Inicio: 1–3 semanas (agota T4 preformada).',
+    indic:['Hipertiroidismo felino — elección médica','Preparación preoperatoria tiroidectomía','Control pre-I131'],
+    dosis:{dog:{val:'No indicado',via:'—'},cat:{val:'Inicio: 1.25–2.5 mg/gato/12h\nAjuste: 2.5–5 mg/gato/12h\nObjetivo T4: 1–2.5 μg/dL',via:'VO con comida · Gel transdérmico oreja (menos biodisponible)'}},
+    alerta:{t:'warning',tx:'⚠️ IRC ENMASCARADA: hipertiroidismo aumenta FGR artificialmente. Al normalizar T4 puede aparecer IRC grave. Controlar creatinina a las 4 semanas. Efectos adversos: vómitos, prurito facial, agranulocitosis (raro, grave).'},
+    rev:[{when:'2–4 semanas ⚠️',col:'#f5a623',what:'T4 + IRC oculta',items:['T4 total (obj: 1–2.5 μg/dL)','Creatinina, SDMA, BUN','Hemograma','PA']},{when:'4–8 semanas',col:'#5b9cf6',what:'Estabilización',items:['T4 + ajuste dosis','Función renal de nuevo','Decidir tratamiento definitivo']},{when:'Cada 3–6 meses',col:'#a78bfa',what:'Crónico',items:['T4, analítica, PA']}],
+    ctx:'Endocrinología',ctxD:'Antes de iniciar: palpar tiroides, ecocardiografía si taquicardia. Objetivo: estabilizar 4–6 sem antes de cirugía o I131. En IRC grave: metimazol crónico ajustado para equilibrio tiroideo-renal.'
+  },
+  {id:'fenobarbital',name:'Fenobarbital',brand:'Luminal · Gardenal',cls:'neuro',clsLabel:'Antiepiléptico',dot:'#a78bfa',
+    mec:'Potencia GABA-A + inhibe canales Na⁺/Ca²⁺. Larga duración. Inductor CYP450 → múltiples interacciones farmacológicas.',
+    indic:['Epilepsia idiopática canina — 1ª línea','Epilepsia sintomática y criptogénica','2ª línea status (tras benzodiacepinas)'],
+    dosis:{dog:{val:'Inicio: 2–3 mg/kg/12h VO\nHasta: 5 mg/kg/12h\nEmergencia: 2–4 mg/kg IV lento c/20min',via:'VO mantenimiento · IV urgencia\nNiveles objetivo: 20–40 μg/mL'},cat:{val:'1.5–2.5 mg/kg/12h VO\nMenor índice terapéutico',via:'VO · Monitorización hepática frecuente'}},
+    alerta:{t:'warning',tx:'Hepatotoxicidad idiosincrásica (raro). Monitorizar ALT/FA. Sedación inicial 2 semanas (normal, explicar propietario). Polifagia/PU/PD (efecto lateral frecuente). No suspender bruscamente.'},
+    rev:[{when:'2 semanas',col:'#a78bfa',what:'Niveles séricos basales',items:['Nivel trough (obj: 20–40 μg/mL)','ALT, FA línea base','Sedación residual']},{when:'4–6 semanas',col:'#5b9cf6',what:'Ajuste fino',items:['Niveles + frecuencia de crisis','Analítica hepática']},{when:'Cada 6 meses',col:'#2dd4a0',what:'Control crónico',items:['Niveles séricos','Función hepática','Diario de crisis']}],
+    ctx:'Neurología',ctxD:'Primera línea epilepsia canina. Alternativas: imepitoin (menos sedante), levetiracetam (mejor seguridad, más caro), zonisamida. En gato: fenobarbital o levetiracetam. Siempre: diario de crisis con propietario.'
+  },
+  {id:'atropina',name:'Atropina',brand:'Atropina Braun · Atrovet',cls:'urgencia',clsLabel:'Anticolinérgico urgencia',dot:'#ff5777',
+    mec:'Antagonista muscarínico competitivo (M1/M2/M3). Bloqueo parasimpático: ↑FC, reduce secreciones GI/bronquiales, broncodilatación. Sin efecto nicotínico.',
+    indic:['Bradicardia sinusal sintomática','Bloqueo AV 2º-3º grado agudo','Intoxicación por organofosfatos/carbamatos','Premedicación anestésica'],
+    dosis:{dog:{val:'Bradicardia: 0.02–0.04 mg/kg IV/IM\nOrganofosfatos: 0.1–0.5 mg/kg IV (titular)\nPremed: 0.02–0.04 mg/kg SC/IM',via:'IV efecto más rápido · IM/SC premedicación'},cat:{val:'0.02–0.04 mg/kg IV/IM',via:'IV/IM'}},
+    alerta:{t:'info',tx:'Organofosfatos: titular hasta secar secreciones (boca seca, midriasis) — NO hasta FC objetivo. Contraindicada en taquiarritmias, glaucoma ángulo cerrado, íleo paralítico.'},
+    rev:[{when:'Post-administración',col:'#ff5777',what:'Control inmediato',items:['FC/ECG','Signos muscarínicos (organofosfatos)','Temperatura']}],
+    ctx:'Urgencias / Anestesia',ctxD:'No es primera línea en bradicardia crónica — siempre buscar causa. Glicopirrolato como alternativa: sin efecto central, duración más larga.'
+  },
+  {id:'amoxiclav',name:'Amoxicilina-Clavulánico',brand:'Synulox · Clavobay · Augmentine',cls:'atb',clsLabel:'Antibiótico β-lactámico',dot:'#4ade80',
+    mec:'Amoxicilina + inhibidor β-lactamasas (clavulánico). Activo frente a productores de penicilinasa: Staphylococcus, E. coli, Pasteurella, anaerobios.',
+    indic:['Pioderma superficial y profundo','ITU no complicada','Infecciones respiratorias altas','Heridas y abscesos'],
+    dosis:{dog:{val:'12.5–25 mg/kg/12h VO\nSynulox: 1 comp(50mg)/4kg/12h\nInyectable: 8.75 mg/kg SC/IV/12-24h',via:'VO con comida · SC/IV disponible\nPioderma profundo: mínimo 6–8 sem'},cat:{val:'12.5 mg/kg/12h VO\nSuspensión: 0.5 ml/kg/12h',via:'VO con comida · SC disponible'}},
+    alerta:{t:'info',tx:'No eficaz frente a Pseudomonas, enterococos, MRSA. En ITU recurrente: cultivo + antibiograma SIEMPRE. Resistencias crecientes en E. coli — no usar empíricamente sin cultivo previo.'},
+    rev:[{when:'5–7 días',col:'#4ade80',what:'Respuesta inicial',items:['Mejoría clínica','Pioderma: control visual','ITU: sedimento urinario']},{when:'Al finalizar',col:'#5b9cf6',what:'Curación y recidiva',items:['Resolución completa','Urocultivo post-tto en ITU']}],
+    ctx:'Dermatología / Infecciones',ctxD:'Primera línea pioderma. En recurrente: cultivo siempre. Duración mínima: no acortar aunque mejore (pioderma profundo: 6–8 semanas mínimo).'
+  },
+];
+
+// ═══════════════════════════════════════
+//  DATA — DDx SÍNTOMAS
+// ═══════════════════════════════════════
+const SYMPTOMS_ES = ['Polidipsia','Poliuria','Vómitos','Pérdida de peso','Convulsiones','Cojera','Prurito','Disnea','Polifagia','Ataxia','Fiebre','Letargia'];
+const SYMPTOMS_EN = ['Polydipsia','Polyuria','Vomiting','Weight loss','Seizures','Lameness','Pruritus','Dyspnea','Polyphagia','Ataxia','Fever','Lethargy'];
+const DDX_MAP = {
+  'Polidipsia':[{n:'HAC (Cushing)',p:75,c:'#f5a623',i:'PU/PD + polifagia + abdomen péndulo. FA muy elevada. Test ACTH.'},{n:'Diabetes mellitus',p:65,c:'#2dd4a0',i:'Glucosa>200 persistente, glucosuria. Insulina.'},{n:'IRC crónica',p:55,c:'#5b9cf6',i:'Isostenuria. BUN/creatinina elevados. Pérdida peso crónica.'},{n:'Hipoadrenocorticismo',p:30,c:'#a78bfa',i:'Debilidad, vómitos, hipotensión. Na/K<27. Test ACTH plano.'}],
+  'Polydipsia':[{n:'HAC (Cushing)',p:75,c:'#f5a623',i:'PU/PD + polyphagia + pot belly. Very high ALP. ACTH test.'},{n:'Diabetes mellitus',p:65,c:'#2dd4a0',i:'Glucose>200 persistent, glucosuria. Insulin.'},{n:'CKD',p:55,c:'#5b9cf6',i:'Isosthenuria. Elevated BUN/creatinine. Chronic weight loss.'}],
+  'Convulsiones':[{n:'Epilepsia idiopática',p:65,c:'#a78bfa',i:'2-6 años, razas predispuestas. Examen y analítica normales. Fenobarbital.'},{n:'Encefalopatía hepática',p:40,c:'#f5a623',i:'Amoniaco elevado. ALT/FA elevadas. Shunt portosistémico en jóvenes.'},{n:'Hipoglucemia',p:35,c:'#2dd4a0',i:'Glucosa<50 mg/dL. Insulinoma, Addison, toy breed.'},{n:'Intoxicación',p:30,c:'#ff5777',i:'Inicio agudo. Historia de exposición. Permetrina(gatos), metaldehído.'}],
+  'Seizures':[{n:'Idiopathic epilepsy',p:65,c:'#a78bfa',i:'2-6 years, predisposed breeds. Normal exam and bloodwork. Phenobarbital.'},{n:'Hepatic encephalopathy',p:40,c:'#f5a623',i:'Elevated ammonia. High ALT/ALP. Portosystemic shunt in young animals.'},{n:'Hypoglycaemia',p:35,c:'#2dd4a0',i:'Glucose<50 mg/dL. Insulinoma, Addison, toy breed.'}],
+  'Cojera':[{n:'Rotura LCA',p:70,c:'#fb923c',i:'Cajón craneal positivo. Derrame articular. Perro mediano/grande.'},{n:'Displasia de codo',p:55,c:'#5b9cf6',i:'Joven, raza grande. Cojera anterior. TC confirma FCP/OCD.'},{n:'Panosteitis',p:40,c:'#f5a623',i:'Joven raza grande, migratoria. Dolor diáfisis en palpación. Autolimitante.'},{n:'Osteosarcoma',p:20,c:'#ff5777',i:'>5 años, raza grande, dolor nocturno. RX: lesión lítica. Mal pronóstico.'}],
+  'Lameness':[{n:'CCL rupture',p:70,c:'#fb923c',i:'Positive cranial drawer. Joint effusion. Medium/large dog.'},{n:'Elbow dysplasia',p:55,c:'#5b9cf6',i:'Young, large breed. Forelimb lameness. CT confirms FCP/OCD.'},{n:'Osteosarcoma',p:20,c:'#ff5777',i:'>5 years, large breed, night pain. X-ray: lytic lesion. Poor prognosis.'}],
+  'Prurito':[{n:'Pioderma superficial',p:70,c:'#2dd4a0',i:'Cocos en citología, collaretes. ATB 3-4 semanas.'},{n:'Dermatitis atópica',p:65,c:'#a78bfa',i:'Crónico, razas predispuestas. Pies/cara/ingles. Diagnóstico de exclusión.'},{n:'Alergia alimentaria',p:50,c:'#f5a623',i:'Sin estacionalidad, no responde corticoides. Exclusión 8 sem.'},{n:'Sarna sarcóptica',p:45,c:'#ff5777',i:'Prurito intensísimo, bordes pabellones. Prueba terapéutica.'}],
+  'Pruritus':[{n:'Superficial pyoderma',p:70,c:'#2dd4a0',i:'Cocci on cytology. Antibiotics 3-4 weeks.'},{n:'Atopic dermatitis',p:65,c:'#a78bfa',i:'Chronic, predisposed breeds. Paws/face/groin. Diagnosis of exclusion.'},{n:'Food allergy',p:50,c:'#f5a623',i:'No seasonality, steroid-unresponsive. 8-week exclusion trial.'}],
+  'Disnea':[{n:'Efusión pleural',p:65,c:'#5b9cf6',i:'Matidez ventral, dificultad respiratoria. POCUS: "swirling". Toracocentesis.'},{n:'Edema pulmonar cardiogénico',p:60,c:'#ff5777',i:'Soplo, crepitantes. RX: patrón intersticial-alveolar, cardiomegalia. Furosemida IV.'},{n:'Asma felino',p:50,c:'#a78bfa',i:'Gato. Sibilancias, tos seca. Responde broncodilatadores. Corticoides.'},{n:'Neumotórax',p:30,c:'#f5a623',i:'Trauma o espontáneo. Matidez + ausencia murmullo. Drenaje urgente.'}],
+  'Dyspnea':[{n:'Pleural effusion',p:65,c:'#5b9cf6',i:'Ventral dullness. POCUS: "swirling". Thoracocentesis.'},{n:'Cardiogenic pulmonary oedema',p:60,c:'#ff5777',i:'Murmur, crackles. X-ray: interstitial-alveolar pattern, cardiomegaly. Furosemide IV.'},{n:'Feline asthma',p:50,c:'#a78bfa',i:'Cat. Wheezes, dry cough. Responds to bronchodilators. Corticosteroids.'}],
+};
+
+// ═══════════════════════════════════════
+//  DATA — TESTS
+// ═══════════════════════════════════════
+const TESTS_DATA = {
+  actuacion:{
+    es:[
+      {type:'actuacion',q:'Labrador 30kg llega con disnea grave. FC 175, mucosas pálidas, TRC 3s, crepitantes bilaterales, soplo mitral V/VI conocido. ¿Primera acción?',ctx:'FR: 58 rpm · SpO2 88% · Sin acceso IV aún · Postura ortopnea',opts:['RX tórax urgente para confirmar edema pulmonar antes de medicar','Furosemida 3 mg/kg IV o IM inmediata + O2 mientras se coloca vía','Fluidoterapia 10 ml/kg para estabilizar la hipotensión','Ecocardiografía urgente para confirmar causa cardíaca'],correct:1,explain:'En edema pulmonar agudo cardiogénico: tratamiento inmediato sin esperar imagen. La RX confirma pero no debe retrasar la furosemida. Los cristaloides están contraindicados — agravan el edema. SpO2 88% con postura ortopnea es diagnóstico suficiente.'},
+      {type:'actuacion',q:'Gato macho 5 años no orina 12h, vocaliza, vejiga grande y dura. K+ = 7.8 mEq/L. ECG muestra ondas T altas y QRS ancho. ¿Qué haces PRIMERO?',ctx:'FC 185 lpm · Temperatura 36.8°C · Deprimido · Mucosas rosadas',opts:['Sondaje uretral urgente para desobstruir inmediatamente','Gluconato cálcico IV lento (cardioprotección) + NaCl 0.9% antes del sondaje','Furosemida IV para forzar diuresis','Citoscéntesis de vaciado total'],correct:1,explain:'K+ >7 + cambios ECG = arritmia hiperkaliémica inminente. El gluconato cálcico (50-100 mg/kg IV lento) estabiliza el miocardio sin bajar el K+ — da tiempo para sondaje seguro. El sondaje sin estabilización cardiovascular puede desencadenar fibrilación ventricular.'},
+      {type:'actuacion',q:'Pastor Alemán 4 años, convulsión generalizada activa desde hace 8 minutos. Sin acceso IV. Propietario tiene midazolam 5mg/mL en casa. ¿Dosis y vía?',ctx:'Sin historia previa de epilepsia · Perro 30 kg · Temperatura 39.8°C',opts:['Esperar: status comienza a los 30 minutos, no a los 8','Midazolam 0.3 mg/kg intranasal (9 mg divididos entre ambas fosas nasales)','Diazepam 10mg oral — absorción rápida sublingual','Atropina IM para controlar las convulsiones'],correct:1,explain:'Status epilepticus = convulsión >5 min. A los 8 min: intervención urgente. Sin acceso IV: midazolam intranasal 0.2-0.5 mg/kg es primera línea. En 30kg: 6-15mg = 1.2-3ml divididos entre ambas fosas. Absorción en 2-3 min. El diazepam oral no tiene absorción útil en convulsión activa.'},
+    ],
+    en:[
+      {type:'actuacion',q:'30kg Labrador arrives with severe dyspnea. HR 175, pale mucosas, CRT 3s, bilateral crackles, known grade V/VI mitral murmur. First action?',ctx:'RR: 58 rpm · SpO2 88% · No IV access yet · Orthopnoeic posture',opts:['Urgent chest X-ray to confirm pulmonary oedema before medicating','Furosemide 3 mg/kg IV or IM immediately + O2 while placing catheter','Fluid bolus 10 ml/kg to stabilise hypotension','Urgent echocardiography to confirm cardiac cause'],correct:1,explain:'In acute cardiogenic pulmonary oedema: immediate treatment without waiting for imaging. X-ray confirms but must not delay furosemide. Crystalloids are contraindicated — they worsen oedema.'},
+    ]
+  },
+  analitica:{
+    es:[
+      {type:'analitica',q:'Cocker Spaniel 9 años, hembra. PU/PD 3 meses, polifagia, abdomen péndulo, alopecia bilateral. Analiza este panel y da el diagnóstico más probable.',ctx:'Glucosa: 118 mg/dL (70–110)\nALT: 312 U/L ⬆⬆ (10–100)\nFA: 2840 U/L ⬆⬆⬆ (10–150)\nColesterol: 410 mg/dL ⬆⬆ (130–300)\nCortisol/Crea orina: 45 (VR <10)\nHematocrito: 40% (37–55)',opts:['Diabetes mellitus (glucosa borderline elevada)','HAC (Cushing): FA muy elevada, colesterol, cortisol/crea × 4.5 límite, clínica típica','Hepatopatía primaria (ALT y FA elevadas)','Hipotiroidismo (colesterol elevado)'],correct:1,explain:'FA >10× el límite superior + isoenzima cortisol-inducida es patognomónico de HAC. El cociente cortisol/crea en orina >10× el límite confirma hipercortisolismo. La glucosa borderline es cortisol-inducida. Próximo paso: test estimulación ACTH para confirmar HAC, luego distinción PDH/FAD.'},
+      {type:'analitica',q:'Gato europeo 13 años, pérdida de peso progresiva 1 kg, polifagia, taquicardia. Interpreta:',ctx:'T4 total: 7.9 μg/dL ⬆⬆ (VR 1.0–4.0)\nBUN: 38 mg/dL (16–36) ⬆\nCreatinina: 1.7 mg/dL (0.8–2.4)\nALT: 88 U/L ⬆ (10–80)\nFC: 238 lpm (120–180)',opts:['IRC con hipertensión secundaria','Hipertiroidismo felino con tirotoxicosis cardíaca y posible IRC enmascarada','Linfoma intestinal con síndrome paraneoplásico','Acromegalia (IGF-1 elevado)'],correct:1,explain:'T4 total >4 μg/dL en gato = hipertiroidismo. FC 238 lpm = tirotoxicosis cardíaca. ALT elevada: frecuente en hipertiroidismo. ⚠️ La creatinina de 1.7 parece normal pero con T4 elevada el FGR está artificialmente alto — al tratar con metimazol puede subir a >2.8 mg/dL (IRC enmascarada). Control de función renal obligatorio a las 4 semanas.'},
+    ],
+    en:[
+      {type:'analitica',q:'9-year-old female Cocker Spaniel. PU/PD 3 months, polyphagia, pot belly, bilateral alopecia. Analyse this panel.',ctx:'Glucose: 118 mg/dL (70–110)\nALT: 312 U/L ↑↑ (10–100)\nALP: 2840 U/L ↑↑↑ (10–150)\nCholesterol: 410 mg/dL ↑↑ (130–300)\nUrine C:C ratio: 45 (ref <10)',opts:['Diabetes mellitus (borderline glucose)','HAC (Cushing): very high ALP, cholesterol, UCC × 4.5 limit, typical signs','Primary hepatopathy (elevated ALT and ALP)','Hypothyroidism (elevated cholesterol)'],correct:1,explain:'ALP >10× upper limit + cortisol-induced isoenzyme is pathognomonic for HAC. UCC >10× limit confirms hypercortisolism. Next step: ACTH stimulation test to confirm, then PDH/FAD distinction.'},
+    ]
+  },
+  imagen:{
+    es:[
+      {type:'imagen',q:'Labrador 9 años, tos crónica y disnea al ejercicio. RX tórax lateral derecha. ¿Diagnóstico más probable?',ctx:'📷 HALLAZGOS RX TÓRAX:\n• VHS: 12.8 (normal <10.5 en Labrador)\n• Tráquea elevada en bifurcación\n• Opacidad intersticio-alveolar perihiliar bilateral\n• Venas pulmonares dilatadas (>arteria lobar)\n• Borde cardíaco caudal redondeado',opts:['Efusión pleural bilateral con compresión pulmonar','ICC izquierda: edema pulmonar cardiogénico por MMVD avanzada','Neumotórax espontáneo con colapso parcial','Linfoma mediastínico anterior'],correct:1,explain:'VHS 12.8 = cardiomegalia marcada. Tráquea elevada = agrandamiento atrio izquierdo que desplaza bifurcación traqueal. Patrón intersticio-alveolar bilateral perihiliar + venas pulmonares dilatadas = edema cardiogénico. En Labrador con soplo mitral conocido: MMVD estadio C. Iniciar furosemida IV + pimobendan + IECA.'},
+      {type:'imagen',q:'Gato 11 años, disnea aguda, matidez ventral bilateral en auscultación. POCUS torácico urgente. ¿Diagnóstico e intervención?',ctx:'🔊 HALLAZGOS POCUS TORÁCICO:\n• Imagen "swirling" (medusa) bilateral\n• Ausencia de líneas A pulmonares\n• Sin sliding sign (no deslizamiento pleural)\n• Corazón desplazado cranealmente\n• Cuadrante test positivo 4 cuadrantes',opts:['Edema pulmonar bilateral: furosemida IV urgente','Efusión pleural bilateral: toracocentesis inmediata diagnóstico-terapéutica','Neumotórax bilateral: drenaje urgente','Masa mediastínica: TC urgente'],correct:1,explain:'Imagen "swirling/medusa" = líquido en espacio pleural. Sin sliding sign = ausencia de pulmón ventilado en esa zona. TORACOCENTESIS inmediata: intercostal 7-9, borde craneal costilla, bilateral. Análisis líquido: triglicéridos (quilotórax), citología (linfoma, exudado), cultivo. En gato: quilotórax, HCM, linfoma.'},
+    ],
+    en:[
+      {type:'imagen',q:'9-year-old Labrador, chronic cough and exercise intolerance. Right lateral chest X-ray. Most likely diagnosis?',ctx:'📷 CHEST X-RAY FINDINGS:\n• VHS: 12.8 (normal <10.5 in Labrador)\n• Elevated trachea at bifurcation\n• Bilateral perihilar interstitial-alveolar opacity\n• Dilated pulmonary veins (>lobar artery)\n• Rounded caudal cardiac border',opts:['Bilateral pleural effusion with pulmonary compression','Left-sided CHF: cardiogenic pulmonary oedema from advanced MMVD','Spontaneous pneumothorax with partial collapse','Anterior mediastinal lymphoma'],correct:1,explain:'VHS 12.8 = marked cardiomegaly. Elevated trachea = left atrial enlargement displacing tracheal bifurcation. Bilateral perihilar interstitial-alveolar pattern + dilated pulmonary veins = cardiogenic oedema. In Labrador with known mitral murmur: MMVD stage C. Start furosemide IV + pimobendan + ACE inhibitor.'},
+    ]
+  },
+  farma:{
+    es:[
+      {type:'farma',q:'Perro CKCS 7 años, MMVD estadio B2 (VHS 11.2, RVLA/Ao 1.7). ¿Cuál es la pauta CORRECTA de pimobendan?',ctx:'Sin signos de ICC · Soplo IV/VI · Ecocardiografía reciente disponible · Propietario disponible para seguimiento',opts:['0.5 mg/kg/24h VO con la comida para minimizar efectos secundarios','0.2–0.3 mg/kg/12h VO, UNA HORA ANTES de comer','0.1 mg/kg/12h VO — dosis baja inicial para evaluar tolerancia','Solo cuando aparezca disnea o tos — no está indicado en B2'],correct:1,explain:'Dosis: 0.2-0.3 mg/kg CADA 12h (no 24h). Administración 1 hora ANTES de la comida: crítico (comida reduce absorción 40%). EPIC study 2016: iniciar en B2 con cardiomegalia retrasa la ICC ~15 meses. Estadio B2 sin cardiomegalia (B1): NO indicado.'},
+      {type:'farma',q:'Inician trilostane 30mg/24h en un Cocker con HAC confirmado. 12 días después, ¿cuál es la prueba OBLIGATORIA?',ctx:'Sin signos de debilidad ni vómitos · Come algo menos · Propietario nota mejoría leve de polidipsia',opts:['Cortisol basal aislado (suficiente para ver respuesta)','Test estimulación ACTH — cortisol post objetivo 40–138 nmol/L','Ecografía abdominal para valorar tamaño adrenales','Analítica general sin test ACTH específico'],correct:1,explain:'Test ACTH a los 10–14 días es OBLIGATORIO con trilostane. Cortisol post <20 nmol/L → suspender + hidrocortisona (Addison iatrogénico). Cortisol post >138 nmol/L → infradosificado. El cortisol basal solo no es suficiente para monitorizar trilostane.'},
+      {type:'farma',q:'Gata 13 años, hipertiroidismo (T4: 8.1). Inicia metimazol. A las 4 semanas T4=1.9 μg/dL. Creatinina pasa de 1.4 → 2.9 mg/dL. ¿Qué haces?',ctx:'Gata come bien · Peso estable · Sin vómitos · PAS 145 mmHg',opts:['Suspender metimazol — la creatinina está demasiado elevada','Reducir dosis metimazol para mantener T4 en 3–4 μg/dL (levemente alta): equilibrio tiroideo-renal','Aumentar dosis metimazol: la T4 todavía no está en límite inferior','Añadir fluidos IV para proteger riñones mientras continúa con metimazol'],correct:1,explain:'IRC ENMASCARADA clásica: el hipertiroidismo eleva FGR artificialmente. Al normalizar T4, el FGR cae. Si creatinina >2.8: reducir metimazol para mantener T4 levemente alta (3-4 μg/dL) → el hipertiroidismo leve tolerable preserva función renal. Suspender el metimazol empeoraría el hipertiroidismo; mantener dosis alta empeora IRC.'},
+    ],
+    en:[
+      {type:'farma',q:'CKCS 7 years, MMVD stage B2 (VHS 11.2, RVLA/Ao 1.7). What is the CORRECT pimobendan regimen?',ctx:'No CHF signs · Grade IV/VI murmur · Recent echocardiography available',opts:['0.5 mg/kg/24h PO with food to minimise side effects','0.2–0.3 mg/kg/12h PO, ONE HOUR BEFORE feeding','0.1 mg/kg/12h PO — low starting dose to assess tolerance','Only when dyspnoea or cough appear — not indicated in B2'],correct:1,explain:'Dose: 0.2-0.3 mg/kg EVERY 12h (not 24h). Administration 1 hour BEFORE food: critical (food reduces absorption 40%). EPIC study 2016: starting in B2 with cardiomegaly delays CHF by ~15 months.'},
+    ]
+  }
+};
+
+// ═══════════════════════════════════════
+//  NAV
+// ═══════════════════════════════════════
+const NAV_SCREENS = ['s-home','s-urgencias','s-anestesia','s-ddx','s-vadecumum'];
+
+function go(id) {
+  document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  const bnav = document.getElementById('bnav');
+  bnav.style.display = NAV_SCREENS.includes(id) ? 'flex' : 'none';
+  document.querySelectorAll('.ni').forEach((n,i) => n.classList.toggle('on', NAV_SCREENS[i]===id));
+  if (id==='s-urgencias') renderUrgencias();
+  if (id==='s-anestesia') aneTab('calc', document.querySelector('#s-anestesia .t-tab'));
+  if (id==='s-anatomia') renderAnatomy();
+  if (id==='s-vadecumum') renderVad();
+  if (id==='s-ddx') renderDdx();
+  if (id==='s-progreso') renderProgreso();
+}
+
+function startApp(lang_) {
+  L = lang_;
+  document.getElementById('s-splash').classList.remove('on');
+  document.getElementById('s-home').classList.add('on');
+  document.getElementById('bnav').style.display = 'flex';
+  applyLang();
+  renderHomeSpecs();
+}
+
+function toggleLang() {
+  L = L==='es' ? 'en' : 'es';
+  document.getElementById('lang-toggle').textContent = L==='es' ? 'EN' : 'ES';
+  applyLang();
+  renderHomeSpecs();
+  toast(L==='es' ? 'Español activado' : 'English activated');
+}
+
+function applyLang() {
+  document.getElementById('lang-toggle').textContent = L==='es' ? 'EN' : 'ES';
+  [['h-greet','greet'],['h-sec-spec','secSpec'],['h-sec-mod','secMod'],['h-sec-test','secTest'],
+   ['m-urg','mUrg'],['m-urg-s','mUrgS'],['m-ane','mAne'],['m-ane-s','mAneS'],
+   ['m-anat','mAnat'],['m-anat-s','mAnatS'],['m-vad','mVad'],['m-vad-s','mVadS'],
+   ['m-ddx','mDdx'],['m-ddx-s','mDdxS'],['m-prog','mProg'],['m-prog-s','mProgS'],
+   ['t1-title','t1'],['t1-sub','t1s'],['t2-title','t2'],['t2-sub','t2s'],
+   ['t3-title','t3'],['t3-sub','t3s'],['t4-title','t4'],['t4-sub','t4s'],
+  ].forEach(([id,k]) => { const el=document.getElementById(id); if(el) el.textContent=t(k); });
+  const ht = document.getElementById('h-title');
+  if (ht) ht.innerHTML = t('title').replace('\n','<br>').replace('clínica diaria','<em>clínica diaria</em>').replace('clinical companion','<em>clinical companion</em>');
+  TXT[L].nl.forEach((lb,i) => { const el=document.getElementById('nl-'+i); if(el) el.textContent=lb; });
+}
+
+function renderHomeSpecs() {
+  const sc = document.getElementById('spec-scroll');
+  sc.innerHTML = SPECS.map(s => {
+    const d = s[L] || s.es;
+    return `<div class="spec-pill" style="background:${s.dot}18;border-color:${s.dot}44;color:${s.dot}" onclick="openSpec('${s.id}')">${s.em} ${d.name}</div>`;
+  }).join('');
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  setTimeout(() => el.classList.remove('on'), 2200);
+}
+
+// ═══════════════════════════════════════
+//  ESPECIALIDADES
+// ═══════════════════════════════════════
+function openSpec(id) {
+  curSpec = SPECS.find(s => s.id===id);
+  if (!curSpec) return;
+  const d = curSpec[L] || curSpec.es;
+  document.getElementById('spec-tb').textContent = d.name;
+  document.getElementById('spec-hero').innerHTML = `
+    <div style="font-size:36px;margin-bottom:10px">${curSpec.em}</div>
+    <div class="spec-h-name">${d.name}</div>
+    <div class="spec-h-sub">${d.sub}</div>
+    <div class="spec-prog"><div class="spec-prog-fill" style="width:${d.prog}%;background:${curSpec.dot}"></div></div>`;
+  specTab('contenido', null);
+  go('s-spec');
+  document.getElementById('bnav').style.display = 'none';
+}
+
+function specTab(tab, el) {
+  document.querySelectorAll('#s-spec .t-tab').forEach(t => t.classList.remove('on'));
+  if (el) el.classList.add('on');
+  else { const tabs = document.querySelectorAll('#s-spec .t-tab'); tabs[0].classList.add('on'); }
+  const d = curSpec[L] || curSpec.es;
+  const body = document.getElementById('spec-body');
+  if (tab==='contenido') {
+    body.innerHTML = d.contenido.map((c,i) => `
+      <div class="card" onclick="toggleExp('se${i}')">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:14px;font-weight:500">${c.title}</div>
+          <span id="sea${i}" style="color:var(--tx3);font-size:18px">›</span>
+        </div>
+        <div style="font-size:12px;color:var(--tx2);margin-top:4px">${c.desc}</div>
+        <div class="expand-body" id="se${i}">
+          ${c.expand.map(p => `<div class="point">${p}</div>`).join('')}
+        </div>
+      </div>`).join('');
+  } else if (tab==='ddx') {
+    body.innerHTML = d.ddx.map(dx => `
+      <div class="ddx-item">
+        <div class="ddx-head"><div class="ddx-name">${dx.name}</div><div class="ddx-pct" style="color:${dx.color}">${dx.prob}%</div></div>
+        <div class="ddx-bar"><div class="ddx-fill" style="width:${dx.prob}%;background:${dx.color}"></div></div>
+        <div class="ddx-info">${dx.info}</div>
+      </div>`).join('');
+  } else if (tab==='farmacos') {
+    const drugs = DRUGS.filter(dr => d.farmacos && d.farmacos.includes(dr.id));
+    body.innerHTML = drugs.length ? drugs.map(dr => `
+      <div class="card" onclick="openDrug('${dr.id}','s-spec')">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:8px;height:8px;border-radius:50%;background:${dr.dot};flex-shrink:0"></div>
+            <div><div style="font-size:14px;font-weight:500">${dr.name}</div><div style="font-size:11px;color:var(--tx3)">${dr.brand}</div></div>
+          </div>
+          <span style="color:var(--tx3)">›</span>
+        </div>
+        <div class="tags"><span class="tag">${dr.clsLabel}</span>${dr.alerta.t==='danger'?'<span class="tag" style="background:var(--rdim);color:var(--red)">⚠️ Alerta crítica</span>':''}</div>
+      </div>`).join('') : `<div style="color:var(--tx2);font-size:13px;padding:20px 0">Fármacos próximamente</div>`;
+  } else {
+    body.innerHTML = `
+      <div class="card" onclick="startTest('actuacion')" style="border-color:rgba(45,212,160,.2)">
+        <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">🗺️</span><div><div style="font-size:14px;font-weight:500">${L==='es'?'¿Cómo actuarías?':'What would you do?'}</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">${L==='es'?'Casos clínicos con decisiones paso a paso':'Step-by-step clinical decision cases'}</div></div></div>
+      </div>
+      <div class="card" onclick="startTest('analitica')" style="border-color:rgba(91,156,246,.2)">
+        <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">📋</span><div><div style="font-size:14px;font-weight:500">${L==='es'?'Interpreta la analítica':'Interpret the bloodwork'}</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">${L==='es'?'Reconoce patrones en laboratorio':'Recognise lab patterns'}</div></div></div>
+      </div>
+      <div class="card" onclick="startTest('imagen')" style="border-color:rgba(245,166,35,.2)">
+        <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">🩻</span><div><div style="font-size:14px;font-weight:500">${L==='es'?'RX · Eco · Imagen':'X-ray · Echo · Imaging'}</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">${L==='es'?'Hallazgos en imagen diagnóstica':'Diagnostic imaging findings'}</div></div></div>
+      </div>
+      <div class="card" onclick="startTest('farma')" style="border-color:rgba(167,139,250,.2)">
+        <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">💊</span><div><div style="font-size:14px;font-weight:500">${L==='es'?'Fármacos y dosis':'Drugs and doses'}</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">${L==='es'?'Posología, contraindicaciones, seguimiento':'Dosing, contraindications, follow-up'}</div></div></div>
+      </div>`;
+  }
+}
+
+function toggleExp(id) {
+  const el = document.getElementById(id);
+  const ar = document.getElementById('se'+'a'+id.substring(2));
+  el.classList.toggle('open');
+  if (ar) ar.textContent = el.classList.contains('open') ? '⌄' : '›';
+}
+
+// ═══════════════════════════════════════
+//  URGENCIAS
+// ═══════════════════════════════════════
+function renderUrgencias() {
+  const data = URGENCIAS[L] || URGENCIAS.es;
+  document.getElementById('urg-title').textContent = t('urgTitle');
+  document.getElementById('urg-sub').textContent = t('urgSub');
+  document.getElementById('urg-warn').textContent = t('urgWarn');
+  document.getElementById('urg-grid').innerHTML = data.map(u => `
+    <div class="urg-card" style="border-top-color:${u.color}" onclick="openProto('${u.id}')">
+      <div style="font-size:28px;margin-bottom:7px">${u.em}</div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:5px">${u.name}</div>
+      <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${u.color}22;color:${u.color}">${u.lv}</span>
+    </div>`).join('');
+}
+
+function openProto(id) {
+  const data = URGENCIAS[L] || URGENCIAS.es;
+  const proto = data.find(u => u.id===id);
+  if (!proto) return;
+  document.getElementById('proto-tb').textContent = proto.em+' '+proto.name;
+  document.getElementById('proto-body').innerHTML = proto.steps.map((s,i) => `
+    ${i>0?'<div class="proto-line"></div>':''}
+    <div class="proto-step">
+      <div class="proto-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="proto-body">
+        <div style="font-size:14px;font-weight:500;margin-bottom:6px">${s.t}</div>
+        <div style="font-size:13px;color:var(--tx2);line-height:1.6">${s.tx}</div>
+        ${s.dosis?`<div class="dosis-box"><div class="dosis-lbl">💊 Dosis</div><div class="dosis-val">${s.dosis.replace(/\n/g,'<br>')}</div></div>`:''}
+      </div>
+    </div>`).join('');
+  go('s-proto');
+  document.getElementById('bnav').style.display='none';
+}
+
+// ═══════════════════════════════════════
+//  ANESTESIA
+// ═══════════════════════════════════════
+function aneTab(tab, el) {
+  aneSection = tab;
+  document.querySelectorAll('#s-anestesia .t-tab').forEach(t => t.classList.remove('on'));
+  if (el) el.classList.add('on');
+  const body = document.getElementById('ane-body');
+  const P = ANE_PROTOCOLS.es;
+
+  if (tab==='calc') {
+    body.innerHTML = `
+      <div style="font-size:18px;font-weight:500;margin-bottom:16px" id="calc-title">${P.premeds.title}</div>
+      <div style="font-size:13px;color:var(--tx2);margin-bottom:12px">Introduce el peso para calcular dosis:</div>
+      <div class="calc-box">
+        <div class="input-row">
+          <input type="number" class="weight-input" id="ane-peso" value="10" min="0.5" max="90" step="0.5" oninput="calcDoses()" placeholder="kg">
+          <span style="font-size:16px;color:var(--tx2)">kg</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <button onclick="setSpecies('dog')" id="sp-dog" class="asa-btn on">🐕 Perro</button>
+          <button onclick="setSpecies('cat')" id="sp-cat" class="asa-btn">🐈 Gato</button>
+        </div>
+        <div style="font-size:11px;color:var(--tx3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.07em">Clasificación ASA</div>
+        <div class="asa-selector" id="asa-sel">
+          ${[1,2,3,4].map(a=>`<button onclick="setASA(${a})" id="asa${a}" class="asa-btn ${a===1?'on':''}" style="${a===1?'background:var(--teal);color:#000;border-color:var(--teal)':''}">ASA ${a}</button>`).join('')}
+        </div>
+        <div id="dose-results" style="margin-top:14px"></div>
+        <div style="font-size:11px;color:var(--tx3);margin-top:10px;line-height:1.5">⚠️ Dosis orientativas. Ajusta según respuesta clínica, monitorización y protocolo anestésico completo.</div>
+      </div>`;
+    calcDoses();
+  } else if (tab==='protocolos') {
+    const ind = P.induccion; const man = P.mantenimiento;
+    body.innerHTML = `
+      <div style="font-size:16px;font-weight:500;margin-bottom:14px">${ind.title}</div>
+      ${ind.agentes.map(a=>`<div class="card"><div style="display:flex;gap:10px;align-items:flex-start"><div style="width:8px;height:8px;border-radius:50%;background:${a.color};margin-top:6px;flex-shrink:0"></div><div><div style="font-size:14px;font-weight:500">${a.name}</div><div style="font-family:var(--fm);font-size:12px;color:${a.color};margin:4px 0">${a.dose}</div><div style="font-size:12px;color:var(--tx2);line-height:1.5">${a.desc}</div></div></div></div>`).join('')}
+      <div class="divider"></div>
+      <div style="font-size:16px;font-weight:500;margin-bottom:14px">${man.title}</div>
+      ${man.agentes.map(a=>`<div class="card"><div style="display:flex;gap:10px;align-items:flex-start"><div style="width:8px;height:8px;border-radius:50%;background:${a.color};margin-top:6px;flex-shrink:0"></div><div><div style="font-size:14px;font-weight:500">${a.name}</div><div style="font-size:12px;color:var(--tx2);line-height:1.5;margin-top:4px">${a.desc}</div></div></div></div>`).join('')}`;
+  } else if (tab==='monitor') {
+    body.innerHTML = P.monitor.params.map(p=>`
+      <div class="block" style="border-left:3px solid ${p.color}">
+        <div style="font-size:14px;font-weight:500;margin-bottom:6px">${p.p}</div>
+        <div style="font-size:12px;color:var(--teal);margin-bottom:5px">✓ Normal: ${p.normal}</div>
+        <div style="font-size:12px;color:var(--amber);line-height:1.5">⚠️ ${p.alarm}</div>
+      </div>`).join('');
+  } else if (tab==='complicaciones') {
+    body.innerHTML = P.complicaciones.items.map(c=>`
+      <div class="block" style="border-top:2px solid ${c.color}">
+        <div style="font-size:14px;font-weight:500;color:${c.color};margin-bottom:10px">${c.name}</div>
+        ${c.steps.map((s,i)=>`<div style="display:flex;gap:8px;font-size:13px;color:var(--tx2);margin-bottom:7px"><span style="color:${c.color};font-family:var(--fm);font-size:11px;flex-shrink:0;margin-top:2px">${i+1}.</span>${s}</div>`).join('')}
+      </div>`).join('');
+  } else if (tab==='ci') {
+    body.innerHTML = P.ci.items.map(c=>`
+      <div class="card">
+        <div style="font-size:14px;font-weight:500;margin-bottom:10px">⚠️ ${c.name}</div>
+        <div style="font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Contraindicaciones</div>
+        ${c.ci.map(ci=>`<div style="font-size:12px;color:var(--red);margin-bottom:4px;display:flex;gap:6px"><span>✕</span>${ci}</div>`).join('')}
+        ${c.prec.length?`<div style="font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:.07em;margin:8px 0 6px">Precauciones</div>${c.prec.map(p=>`<div style="font-size:12px;color:var(--amber);margin-bottom:4px;display:flex;gap:6px"><span>!</span>${p}</div>`).join('')}`:''}
+      </div>`).join('');
+  }
+}
+
+let aneSpecies = 'dog';
+function setSpecies(sp) {
+  aneSpecies = sp;
+  ['dog','cat'].forEach(s => {
+    const b = document.getElementById('sp-'+s);
+    if (b) { b.classList.toggle('on', s===sp); b.style.background=s===sp?'var(--teal)':''; b.style.color=s===sp?'#000':''; b.style.borderColor=s===sp?'var(--teal)':''; }
+  });
+  calcDoses();
+}
+function setASA(n) {
+  aneASA = n;
+  [1,2,3,4].forEach(a => {
+    const b = document.getElementById('asa'+a);
+    if(b){ b.classList.toggle('on',a===n); b.style.background=a===n?'var(--teal)':''; b.style.color=a===n?'#000':''; b.style.borderColor=a===n?'var(--teal)':''; }
+  });
+  calcDoses();
+}
+
+function calcDoses() {
+  const peso = parseFloat(document.getElementById('ane-peso')?.value) || 10;
+  anePeso = peso;
+  const sp = aneSpecies; const asa = aneASA;
+  const PREMED = {
+    dog:{1:[{n:'Dexmedetomidina',dose:0.008,unit:'mg/kg',conc:0.5,via:'IM'},{n:'Metadona',dose:0.3,unit:'mg/kg',conc:10,via:'IM'},{n:'Butorfanol',dose:0.2,unit:'mg/kg',conc:10,via:'IM'}],
+         2:[{n:'Dexmedetomidina',dose:0.004,unit:'mg/kg',conc:0.5,via:'IM'},{n:'Metadona',dose:0.25,unit:'mg/kg',conc:10,via:'IM'}],
+         3:[{n:'Butorfanol',dose:0.3,unit:'mg/kg',conc:10,via:'IM'},{n:'Buprenorfina',dose:0.02,unit:'mg/kg',conc:0.3,via:'IM'}],
+         4:[{n:'Fentanilo',dose:0.003,unit:'mg/kg',conc:0.05,via:'IV lento'},{n:'Midazolam',dose:0.15,unit:'mg/kg',conc:5,via:'IV'}]},
+    cat:{1:[{n:'Dexmedetomidina',dose:0.015,unit:'mg/kg',conc:0.5,via:'IM'},{n:'Butorfanol',dose:0.4,unit:'mg/kg',conc:10,via:'IM'}],
+         2:[{n:'Dexmedetomidina',dose:0.008,unit:'mg/kg',conc:0.5,via:'IM'},{n:'Butorfanol',dose:0.3,unit:'mg/kg',conc:10,via:'IM'}],
+         3:[{n:'Butorfanol',dose:0.2,unit:'mg/kg',conc:10,via:'IM'},{n:'Buprenorfina',dose:0.02,unit:'mg/kg',conc:0.3,via:'IM'}],
+         4:[{n:'Alfaxalona',dose:1,unit:'mg/kg',conc:10,via:'IM'},{n:'Butorfanol',dose:0.2,unit:'mg/kg',conc:10,via:'IM'}]},
+  };
+  const ASA_LABELS = {1:'ASA I · Sano',2:'ASA II · Enfermedad leve',3:'ASA III · Moderado',4:'ASA IV · Riesgo vital'};
+  const ASA_COLS = {1:'#4ade80',2:'#2dd4a0',3:'#f5a623',4:'#ff5777'};
+  const drugs = PREMED[sp]?.[asa] || PREMED[sp]?.[1] || [];
+  const col = ASA_COLS[asa];
+  document.getElementById('dose-results').innerHTML = `
+    <div style="font-size:11px;font-weight:500;color:${col};text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">${ASA_LABELS[asa]}</div>
+    <div class="result-grid">
+      ${drugs.map(d => {
+        const totalMg = (d.dose * peso).toFixed(2);
+        const volML = d.conc ? (parseFloat(totalMg) / d.conc).toFixed(2) : '—';
+        return `<div class="result-item">
+          <div class="result-drug">${d.n}</div>
+          <div class="result-dose">${totalMg} mg</div>
+          <div class="result-vol">${volML} ml (${d.conc} mg/ml)</div>
+          <div class="result-via">${d.via}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="margin-top:12px">
+      <div style="font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Inducción orientativa</div>
+      <div class="result-grid">
+        ${sp==='dog'?`
+        <div class="result-item"><div class="result-drug">Propofol</div><div class="result-dose">${(3*peso).toFixed(1)}–${(6*peso).toFixed(1)} mg</div><div class="result-vol">${(3*peso/10).toFixed(1)}–${(6*peso/10).toFixed(1)} ml (10 mg/ml)</div><div class="result-via">IV titulado</div></div>
+        <div class="result-item"><div class="result-drug">Alfaxalona</div><div class="result-dose">${(2*peso).toFixed(1)}–${(3*peso).toFixed(1)} mg</div><div class="result-vol">${(2*peso/10).toFixed(1)}–${(3*peso/10).toFixed(1)} ml (10 mg/ml)</div><div class="result-via">IV titulado</div></div>
+        `:`
+        <div class="result-item"><div class="result-drug">Alfaxalona</div><div class="result-dose">${(3*peso).toFixed(1)}–${(5*peso).toFixed(1)} mg</div><div class="result-vol">${(3*peso/10).toFixed(1)}–${(5*peso/10).toFixed(1)} ml (10 mg/ml)</div><div class="result-via">IV titulado</div></div>
+        <div class="result-item"><div class="result-drug">Ketamina</div><div class="result-dose">${(2*peso).toFixed(1)}–${(5*peso).toFixed(1)} mg</div><div class="result-vol">${(2*peso/10).toFixed(1)}–${(5*peso/10).toFixed(1)} ml (100 mg/ml)</div><div class="result-via">IV + BZD</div></div>
+        `}
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════
+//  ANATOMÍA
+// ═══════════════════════════════════════
+const ANAT = {
+  es:[
+    {title:'Sistema cardiovascular',sections:[
+      {ic:'❤️',name:'Ciclo cardíaco',sub:'Sístole, diástole y presiones',pts:['Sístole: contracción ventricular, apertura semilunares, eyección. Volumen sistólico ~1 ml/kg en reposo','Diástole: relajación ventricular, llenado pasivo + activo (kick atrial = 20-30% llenado)','Ley Frank-Starling: mayor precarga → mayor fuerza contracción (hasta límite)','Gasto cardíaco = Volumen sistólico × FC. Perro 20-30 kg: ~3-5 L/min','Presión sistólica normal: perro 100-160 mmHg, gato 100-150 mmHg']},
+      {ic:'🔌',name:'Sistema de conducción',sub:'Nodo SA, AV, His-Purkinje y automatismo',pts:['Nodo SA (marcapasos fisiológico): aurícula derecha, 60-180 lpm perro','Nodo AV: retraso fisiológico (intervalo PR 60-130ms). Protege al ventrículo de taquicardias auriculares','Haz de His → ramas izquierda y derecha → Purkinje: activación ventricular sincronizada','Automatismo intrínseco: His 40-60 lpm, Purkinje 20-40 lpm (ritmos de escape)','FA: los impulsos auriculares caóticos se filtran parcialmente en AV → ventrículo irregular']},
+    ]},
+    {title:'Sistema nervioso',sections:[
+      {ic:'🧠',name:'SNC: Cerebro y cerebelo',sub:'Funciones y signos de lesión por localización',pts:['Córtex cerebral: comportamiento, visión (campo contralateral), propioocepción consciente','Cerebelo: coordinación, equilibrio, tono muscular. Lesión: ataxia cerebelosa + dismetría, SIN paresia','Tronco encefálico: consciencia (SARA), NC III-XII, centros cardiovascular y respiratorio vital','Hipotálamo: temperatura, apetito, sed, ejes hormonales HPT/HPA/HPG','Lesión cerebelosa vs cortical: cerebelosa = sin paresia. Cortical = con paresia']},
+      {ic:'⚡',name:'SNP: Neurona motora superior e inferior',sub:'Diferencias clave en clínica',pts:['NMS (asta ventral superior): lesión encéfalo o médula espinal por encima del segmento','NMS → hiperreflexia, hipertonía, paresia espástica. Atrofia muscular tardía (desuso)','NMI (asta ventral + nervio periférico): lesión médula en segmento o nervio periférico','NMI → hiporreflexia/arreflexia, hipotonía, atrofia neurógena rápida (días-semanas)','Clave diagnóstica: ¿reflejos normales/aumentados o reducidos/ausentes?']},
+    ]},
+    {title:'Ejes hormonales',sections:[
+      {ic:'⚗️',name:'Eje HPT',sub:'Hipotálamo–Pituitaria–Tiroides',pts:['TRH (hipotálamo) → TSH (adenohipófisis) → T3/T4 (tiroides)','Retroalimentación negativa: T3/T4 altos inhiben TRH y TSH','T4 es la forma circulante mayoritaria; conversión periférica a T3 activo','Hipotiroidismo canino: T4↓ + TSH↑. Causa: tiroiditis linfoplasmocítica o atrofia idiopática','Hipertiroidismo felino: T4↑ + TSH↓ (suprimida). Nódulo tiroideo hiperfuncionante','Trampas: Euthyroid sick syndrome en enfermedades graves → T4 falsamente baja']},
+      {ic:'🌿',name:'Eje HPA',sub:'Hipotálamo–Pituitaria–Adrenal',pts:['CRH → ACTH → Cortisol (zona fasciculada corteza adrenal)','Cortisol: gluconeogénico, antiinflamatorio, inmunosupresor, catabólico','HAC PDH (80-85%): adenoma hipofisario → ACTH↑↑ → cortisol↑ bilateral','HAC FAD (15-20%): tumor adrenal autónomo → ACTH↓ (suprimida) → cortisol↑ unilateral','Addison (hipoadrenocorticismo): ACTH↑ + cortisol↓. Na/K<27. Crisis adrenal = urgencia']},
+    ]},
+  ]
+};
+function renderAnatomy() {
+  const data = ANAT[L] || ANAT.es;
+  document.getElementById('anat-tb').textContent = t('anatTb');
+  document.getElementById('anat-body').innerHTML = data.map((sec,si) => `
+    <div style="margin-bottom:20px">
+      <div style="font-family:var(--fs);font-size:18px;margin-bottom:12px">${sec.title}</div>
+      ${sec.sections.map((s,i) => `
+        <div class="card" onclick="toggleAnat('a${si}_${i}')">
+          <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
+            <div style="display:flex;gap:10px;align-items:center">
+              <span style="font-size:22px">${s.ic}</span>
+              <div><div style="font-size:14px;font-weight:500">${s.name}</div><div style="font-size:11px;color:var(--tx2)">${s.sub}</div></div>
+            </div>
+            <span id="aa${si}_${i}" style="font-size:18px;color:var(--tx3)">›</span>
+          </div>
+          <div class="expand-body" id="a${si}_${i}">
+            ${s.pts.map(p=>`<div class="point">${p}</div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function toggleAnat(id) {
+  const el = document.getElementById(id);
+  const ar = document.getElementById('a'+'a'+id.substring(1));
+  el.classList.toggle('open');
+  if(ar) ar.textContent = el.classList.contains('open')? '⌄':'›';
+}
+
+// ═══════════════════════════════════════
+//  VADEMÉCUM
+// ═══════════════════════════════════════
+const VAD_CLASSES = [
+  {id:'all',lb:'Todos',c:'#0d9268'},{id:'cardio',lb:'❤️ Cardio',c:'#ff5777'},
+  {id:'neuro',lb:'🧠 Neuro/SNC',c:'#a78bfa'},{id:'analgesico',lb:'💊 Analgesia',c:'#5b9cf6'},
+  {id:'hormonal',lb:'⚗️ Hormonal',c:'#f5a623'},{id:'urgencia',lb:'🚨 Urgencia',c:'#ff5777'},
+  {id:'atb',lb:'🦠 ATB',c:'#4ade80'},
+];
+function renderVad() {
+  document.getElementById('vad-tb').textContent = t('vadTb');
+  document.getElementById('vad-chips').innerHTML = VAD_CLASSES.map(c=>
+    `<div class="chip ${c.id===vadClass?'on':''}" style="${c.id===vadClass?'background:'+c.c+';border-color:'+c.c+';color:#000':''}" onclick="setVadClass('${c.id}',this,'${c.c}')">${c.lb}</div>`
+  ).join('');
+  renderVadList(vadClass==='all' ? DRUGS : DRUGS.filter(d=>d.cls===vadClass));
+}
+function setVadClass(cls,el,col) {
+  vadClass = cls;
+  document.querySelectorAll('#s-vadecumum .chip').forEach(c=>{c.classList.remove('on');c.style.background='';c.style.borderColor='';c.style.color='';});
+  el.classList.add('on'); el.style.background=col; el.style.borderColor=col; el.style.color='#000';
+  renderVadList(cls==='all'?DRUGS:DRUGS.filter(d=>d.cls===cls));
+}
+function vadSearch(v) {
+  const list = v ? DRUGS.filter(d=>d.name.toLowerCase().includes(v.toLowerCase())||d.brand.toLowerCase().includes(v.toLowerCase())) : DRUGS;
+  renderVadList(list);
+}
+function renderVadList(list) {
+  document.getElementById('vad-list').innerHTML = list.map(d=>`
+    <div class="card" onclick="openDrug('${d.id}','s-vadecumum')">
+      <div style="display:flex;align-items:center;gap:10px;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:${d.dot};flex-shrink:0"></div>
+          <div><div style="font-size:14px;font-weight:500">${d.name}</div><div style="font-size:11px;color:var(--tx3)">${d.brand}</div></div>
+        </div>
+        <span style="font-size:11px;padding:3px 9px;border-radius:20px;background:${d.dot}22;color:${d.dot};flex-shrink:0">${d.clsLabel}</span>
+      </div>
+      ${d.alerta.t==='danger'?'<div style="margin-top:7px;font-size:11px;color:var(--red)">⚠️ Alerta crítica de especie</div>':''}
+    </div>`).join('');
+}
+
+function openDrug(id, backScreen) {
+  curDrug = DRUGS.find(d=>d.id===id);
+  if (!curDrug) return;
+  document.getElementById('drug-back').onclick = () => go(backScreen||'s-vadecumum');
+  document.getElementById('drug-tb').textContent = curDrug.name;
+  document.getElementById('drug-hero').innerHTML = `
+    <div style="padding:18px 18px 14px;border-bottom:1px solid var(--b1)">
+      <div style="font-family:var(--fs);font-size:24px">${curDrug.name}</div>
+      <div style="font-size:13px;color:var(--tx2);margin-top:2px">${curDrug.brand}</div>
+      <span style="display:inline-block;margin-top:10px;font-size:11px;padding:4px 10px;border-radius:20px;background:${curDrug.dot}22;color:${curDrug.dot}">${curDrug.clsLabel}</span>
+    </div>`;
+  drugTab('ficha', null);
+  go('s-drug');
+  document.getElementById('bnav').style.display='none';
+}
+
+function drugTab(tab, el) {
+  document.querySelectorAll('#s-drug .t-tab').forEach(t=>t.classList.remove('on'));
+  if(el) el.classList.add('on');
+  else document.querySelectorAll('#s-drug .t-tab')[0].classList.add('on');
+  const d = curDrug;
+  const body = document.getElementById('drug-body');
+  if(tab==='ficha') {
+    body.innerHTML = `
+      <div class="block"><div class="blabel">Mecanismo de acción</div><div class="mec">${d.mec}</div></div>
+      <div class="block"><div class="blabel">Indicaciones</div>${d.indic.map(i=>`<div class="indic">${i}</div>`).join('')}</div>
+      <div class="alert-box" style="background:${d.alerta.t==='danger'?'var(--rdim)':d.alerta.t==='warning'?'var(--adim)':'var(--bdim)'};border:1px solid ${d.alerta.t==='danger'?'rgba(255,87,119,.25)':d.alerta.t==='warning'?'rgba(245,166,35,.25)':'rgba(91,156,246,.25)'}">
+        <div class="alert-title" style="color:${d.alerta.t==='danger'?'var(--red)':d.alerta.t==='warning'?'var(--amber)':'var(--blue)'}">${d.alerta.t==='danger'?'⚠️ ALERTA CRÍTICA':d.alerta.t==='warning'?'⚡ PRECAUCIÓN':'ℹ️ NOTA'}</div>
+        <div class="alert-text" style="color:${d.alerta.t==='danger'?'var(--red)':d.alerta.t==='warning'?'var(--amber)':'var(--blue)'}">${d.alerta.tx}</div>
+      </div>`;
+  } else if(tab==='dosis') {
+    body.innerHTML = `
+      <div class="dg">
+        <div class="db" style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2)">
+          <div class="dsp" style="color:#4ade80">🐕 Perro</div>
+          <div class="dval" style="color:#4ade80">${d.dosis.dog.val.replace(/\n/g,'<br>')}</div>
+          <div class="dvia">${d.dosis.dog.via.replace(/\n/g,'<br>')}</div>
+        </div>
+        <div class="db" style="background:var(--bdim);border:1px solid rgba(91,156,246,.2)">
+          <div class="dsp" style="color:var(--blue)">🐈 Gato</div>
+          <div class="dval" style="color:var(--blue)">${d.dosis.cat.val.replace(/\n/g,'<br>')}</div>
+          <div class="dvia">${d.dosis.cat.via.replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+      <button onclick="evalDrug()" style="width:100%;background:var(--tdim);border:1px solid rgba(45,212,160,.3);border-radius:50px;padding:12px;font-size:13px;font-weight:500;color:var(--teal);cursor:pointer;font-family:var(--fn);margin-top:6px">🧪 Evalúate sobre este fármaco ↗</button>`;
+  } else if(tab==='revision') {
+    body.innerHTML = `<div class="blabel" style="margin-bottom:12px">Protocolo de revisión clínica</div>
+      <div class="rtl">${d.rev.map(r=>`
+        <div class="rstep">
+          <div class="rdot" style="background:${r.col}"></div>
+          <div class="rwhen" style="color:${r.col}">${r.when}</div>
+          <div class="rwhat">${r.what}</div>
+          <div class="ritems">${r.items.map(i=>`<span class="tag">${i}</span>`).join('')}</div>
+        </div>`).join('')}
+      </div>`;
+  } else {
+    body.innerHTML = `<div class="block"><div class="blabel">Contexto clínico</div><div style="font-size:13px;font-weight:500;color:${d.dot};margin-bottom:8px">${d.ctx}</div><div class="mec">${d.ctxD}</div></div>`;
+  }
+}
+
+function evalDrug() {
+  const qs = TESTS_DATA.farma[L] || TESTS_DATA.farma.es || [];
+  const drugQs = qs.filter(q => q && curDrug && (q.q.toLowerCase().includes(curDrug.name.toLowerCase().split(' ')[0].substring(0,5))));
+  startTestWithQuestions(drugQs.length ? drugQs : qs, L==='es'?curDrug.name:curDrug.name);
+}
+
+// ═══════════════════════════════════════
+//  DDx
+// ═══════════════════════════════════════
+function renderDdx() {
+  document.getElementById('ddx-tb').textContent = t('ddxTb');
+  document.getElementById('ddx-sec').textContent = t('ddxSec');
+  document.getElementById('ddx-search').placeholder = L==='es'?'Escribe síntoma...':'Type symptom...';
+  const syms = L==='es' ? SYMPTOMS_ES : SYMPTOMS_EN;
+  ddxActive = [];
+  document.getElementById('ddx-chips').innerHTML = syms.map(s=>
+    `<div class="chip" onclick="toggleSym('${s}',this)">${s}</div>`
+  ).join('');
+  document.getElementById('ddx-results').innerHTML = '';
+}
+function toggleSym(sym,el) {
+  el.classList.toggle('on');
+  if(el.classList.contains('on')){ el.style.background='var(--purple)';el.style.color='#fff';el.style.borderColor='var(--purple)'; ddxActive.push(sym); }
+  else { el.style.background='';el.style.color='';el.style.borderColor=''; ddxActive=ddxActive.filter(s=>s!==sym); }
+  showDDx();
+}
+function showDDx() {
+  if(!ddxActive.length){ document.getElementById('ddx-results').innerHTML=''; return; }
+  const sym = ddxActive[ddxActive.length-1];
+  const ddx = DDX_MAP[sym]||[];
+  document.getElementById('ddx-results').innerHTML = `<div class="sec" style="margin-top:0">${L==='es'?'Diagnósticos diferenciales':'Differential diagnoses'}</div>` +
+    ddx.map(d=>`<div class="ddx-item"><div class="ddx-head"><div class="ddx-name">${d.n}</div><div class="ddx-pct" style="color:${d.c}">${d.p}%</div></div><div class="ddx-bar"><div class="ddx-fill" style="width:${d.p}%;background:${d.c}"></div></div><div class="ddx-info">${d.i}</div></div>`).join('');
+}
+function ddxSearch(v) {
+  const syms = L==='es'?SYMPTOMS_ES:SYMPTOMS_EN;
+  const match = syms.find(s=>s.toLowerCase().includes(v.toLowerCase()));
+  if(match && v.length>2) {
+    document.querySelectorAll('#ddx-chips .chip').forEach(c=>{ if(c.textContent===match){ c.classList.add('on'); c.style.background='var(--purple)'; c.style.color='#fff'; c.style.borderColor='var(--purple)'; if(!ddxActive.includes(match)) ddxActive.push(match); }});
+    showDDx();
+  }
+}
+
+// ═══════════════════════════════════════
+//  TESTS
+// ═══════════════════════════════════════
+function startTest(type) {
+  const qs = TESTS_DATA[type]?.[L] || TESTS_DATA[type]?.es || [];
+  startTestWithQuestions(qs, type);
+}
+function startTestWithQuestions(qs, typeLabel) {
+  testQuestions = qs;
+  testIdx = 0; testAnswered = false;
+  const labels = {actuacion:L==='es'?'¿Cómo actuarías?':'What would you do?',analitica:L==='es'?'Analítica':'Bloodwork',imagen:L==='es'?'Imagen':'Imaging',farma:L==='es'?'Fármacos':'Drugs'};
+  document.getElementById('test-tb').textContent = labels[typeLabel]||typeLabel;
+  renderTestQ();
+  go('s-test');
+  document.getElementById('bnav').style.display='none';
+}
+function renderTestQ() {
+  const q = testQuestions[testIdx];
+  if(!q){ showTestEnd(); return; }
+  testAnswered=false;
+  const total=testQuestions.length;
+  document.getElementById('test-count').textContent=`${testIdx+1}/${total}`;
+  document.getElementById('test-prog').style.width=((testIdx/total)*100)+'%';
+  const tColors={actuacion:'rgba(45,212,160,.15)',analitica:'rgba(91,156,246,.15)',imagen:'rgba(245,166,35,.15)',farma:'rgba(167,139,250,.15)'};
+  const tTxt={actuacion:'var(--teal)',analitica:'var(--blue)',imagen:'var(--amber)',farma:'var(--purple)'};
+  const tLbl={actuacion:{es:'Actuación clínica',en:'Clinical action'},analitica:{es:'Analítica',en:'Bloodwork'},imagen:{es:'Imagen diagnóstica',en:'Diagnostic imaging'},farma:{es:'Fármacos',en:'Drugs'}};
+  const letters=['A','B','C','D'];
+  document.getElementById('test-body').innerHTML=`
+    <span class="q-type" style="background:${tColors[q.type]||'var(--s2)'};color:${tTxt[q.type]||'var(--tx)'}">${tLbl[q.type]?.[L]||q.type}</span>
+    <div class="question">${q.q}</div>
+    ${q.ctx?`<div class="ctx">${q.ctx.replace(/\n/g,'<br>')}</div>`:''}
+    <div class="opts" id="opts">
+      ${q.opts.map((o,i)=>`<button class="opt" id="opt${i}" onclick="answerQ(${i},${q.correct})"><span class="opt-l">${letters[i]}</span><span>${o}</span></button>`).join('')}
+    </div>
+    <div class="explain" id="exp">✓ ${q.explain}</div>
+    <button class="next-btn" id="nxt" onclick="testIdx++;renderTestQ()">
+      ${testIdx<testQuestions.length-1?(L==='es'?'Siguiente →':'Next →'):(L==='es'?'Ver resultado':'See result')}
+    </button>`;
+}
+function answerQ(chosen,correct) {
+  if(testAnswered)return; testAnswered=true;
+  document.querySelectorAll('.opt').forEach((b,i)=>{b.classList.add('off'); if(i===correct)b.classList.add('ok'); else if(i===chosen)b.classList.add('ko');});
+  document.getElementById('exp').style.display='block';
+  document.getElementById('nxt').style.display='block';
+}
+function showTestEnd() {
+  document.getElementById('test-prog').style.width='100%';
+  document.getElementById('test-body').innerHTML=`<div style="text-align:center;padding:50px 16px"><div style="font-size:56px;margin-bottom:16px">🎓</div><div style="font-family:var(--fs);font-size:22px;margin-bottom:10px">${L==='es'?'Sesión completada':'Session completed'}</div><div style="font-size:14px;color:var(--tx2);margin-bottom:32px">${L==='es'?'Repasa los errores y vuelve a practicar':'Review your mistakes and keep practising'}</div><button onclick="go('s-home')" style="background:var(--teal);border:none;border-radius:50px;padding:13px 30px;font-size:14px;font-weight:600;color:#000;cursor:pointer;font-family:var(--fn)">${L==='es'?'← Volver al inicio':'← Back to home'}</button></div>`;
+}
+
+// ═══════════════════════════════════════
+//  PROGRESO
+// ═══════════════════════════════════════
+function renderProgreso() {
+  document.getElementById('prog-tb').textContent = t('progTb');
+  const specs = SPECS.map(s => {const d=s[L]||s.es; return {em:s.em,name:d.name,pct:d.prog,col:s.dot};});
+  const phases_es=[
+    {ph:'Fase 1 · Jun–Ago 2026',lb:'Bases: anatomía, fisiología y ejes',done:true,c:'#2dd4a0'},
+    {ph:'Fase 2 · Sep–Oct 2026',lb:'Especialidades y motor DDx',done:false,c:'#5b9cf6'},
+    {ph:'Fase 3 · Nov 2026',lb:'Urgencias, anestesia y casos completos',done:false,c:'#ff5777'},
+    {ph:'Fase 4 · Dic–Ene 2027',lb:'Vademécum, IA clínica y revisión final',done:false,c:'#a78bfa'},
+  ];
+  const phases_en=[
+    {ph:'Phase 1 · Jun–Aug 2026',lb:'Foundations: anatomy, physiology, axes',done:true,c:'#2dd4a0'},
+    {ph:'Phase 2 · Sep–Oct 2026',lb:'Specialties and DDx engine',done:false,c:'#5b9cf6'},
+    {ph:'Phase 3 · Nov 2026',lb:'Emergencies, anaesthesia and full cases',done:false,c:'#ff5777'},
+    {ph:'Phase 4 · Dec–Jan 2027',lb:'Formulary, clinical AI and final review',done:false,c:'#a78bfa'},
+  ];
+  const phases = L==='es'? phases_es : phases_en;
+  document.getElementById('prog-body').innerHTML=`
+    <div class="stat-grid">
+      <div class="stat-c"><div class="stat-v">16%</div><div class="stat-l">${L==='es'?'Global':'Overall'}</div></div>
+      <div class="stat-c"><div class="stat-v">7</div><div class="stat-l">Tests</div></div>
+      <div class="stat-c"><div class="stat-v">Jun'26</div><div class="stat-l">${L==='es'?'Inicio':'Started'}</div></div>
+    </div>
+    <div class="sec">${L==='es'?'Por especialidad':'By specialty'}</div>
+    ${specs.map(s=>`
+      <div class="ps-row">
+        <div style="font-size:22px;flex-shrink:0;width:32px;text-align:center">${s.em}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500;margin-bottom:5px">${s.name}</div>
+          <div style="height:3px;background:var(--b1);border-radius:2px"><div style="height:100%;border-radius:2px;width:${s.pct}%;background:${s.col}"></div></div>
+        </div>
+        <div style="font-size:12px;font-family:var(--fm);color:${s.col};flex-shrink:0;width:32px;text-align:right">${s.pct}%</div>
+      </div>`).join('')}
+    <div class="sec">${L==='es'?'Hoja de ruta':'Road map'}</div>
+    ${phases.map(p=>`
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px">
+        <div style="width:10px;height:10px;border-radius:50%;background:${p.done?p.c:'var(--b2)'};flex-shrink:0;margin-top:4px"></div>
+        <div><div style="font-size:11px;color:var(--tx3)">${p.ph}</div><div style="font-size:13px;font-weight:500;color:${p.done?p.c:'var(--tx)'}">${p.lb}</div></div>
+      </div>`).join('')}`;
+}
+
+// INIT
+document.getElementById('bnav').style.display='none';
+</script>
+</body>
+</html>
