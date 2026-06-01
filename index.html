@@ -34,14 +34,20 @@ body{font-family:var(--fn);background:var(--bg);color:var(--tx);-webkit-font-smo
 .scr.on{display:block;}
 
 /* ── TOPBAR ── */
-.tb{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;padding-top:calc(env(safe-area-inset-top,0px)+14px);background:rgba(6,15,30,0.92);border-bottom:1px solid var(--b1);backdrop-filter:blur(20px);}
+.tb{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+  padding-top:calc(env(safe-area-inset-top,0px) + 14px);
+  padding-left:calc(env(safe-area-inset-left,0px) + 24px);
+  padding-right:calc(env(safe-area-inset-right,0px) + 24px);
+  background:rgba(6,15,30,0.92);border-bottom:1px solid var(--b1);backdrop-filter:blur(20px);}
 .tb-logo{font-family:var(--fs);font-size:20px;color:var(--teal);}
-.tb-title{font-size:15px;font-weight:500;color:var(--tx);}
-.back{width:34px;height:34px;border-radius:50%;border:1px solid var(--b2);background:var(--s1);color:var(--tx);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
-.lang-btn{font-size:12px;padding:5px 11px;border-radius:20px;border:1px solid var(--b2);background:transparent;color:var(--tx2);cursor:pointer;font-family:var(--fn);}
+.tb-title{font-size:15px;font-weight:500;color:var(--tx);flex:1;text-align:center;margin:0 8px;}
+/* Back btn: bigger touch target, more padding from edge */
+.back{width:44px;height:44px;border-radius:50%;border:1px solid var(--b2);background:var(--s2);color:var(--tx);font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-left:8px;}
+.lang-btn{font-size:12px;padding:6px 13px;border-radius:20px;border:1px solid var(--b2);background:transparent;color:var(--tx2);cursor:pointer;font-family:var(--fn);min-height:36px;}
 
 /* ── BOTTOM NAV ── */
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:space-around;background:rgba(6,15,30,0.95);border-top:1px solid var(--b1);padding:8px 0;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));backdrop-filter:blur(20px);}
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:space-around;background:rgba(6,15,30,0.95);border-top:1px solid var(--b1);padding:8px calc(env(safe-area-inset-right,0px) + 4px) 0 calc(env(safe-area-inset-left,0px) + 4px);padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));backdrop-filter:blur(20px);}
 .ni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 12px;transition:transform .15s;}
 .ni:active{transform:scale(.9);}
 .ni-ic{font-size:20px;}
@@ -49,7 +55,7 @@ body{font-family:var(--fn);background:var(--bg);color:var(--tx);-webkit-font-smo
 .ni.on .ni-lb{color:var(--teal);}
 
 /* ── COMMON ── */
-.pad{padding:16px 18px 100px;}
+.pad{padding:16px 18px 100px; padding-left:calc(env(safe-area-inset-left,0px) + 24px); padding-right:calc(env(safe-area-inset-right,0px) + 24px);}
 .sec{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin:20px 0 10px;}
 .card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s;}
 .card:active{transform:scale(.98);}
@@ -277,6 +283,22 @@ body{font-family:var(--fn);background:var(--bg);color:var(--tx);-webkit-font-smo
         <div class="mod-sub" id="m-prog-s">Ruta hasta enero 2027</div>
         <div class="prog-mini"><div class="prog-mini-fill" style="width:16%;background:var(--teal)"></div></div>
       </div>
+      <div class="mod-tile" style="border-color:rgba(45,212,160,.3);background:linear-gradient(135deg,rgba(45,212,160,.08),rgba(91,156,246,.04))" onclick="go('s-ia');initIA()">
+        <div class="mod-em">🤖</div>
+        <div class="mod-name" id="m-ia">Tutor IA</div>
+        <div class="mod-sub" id="m-ia-s">Pregunta lo que quieras</div>
+        <span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(45,212,160,.15);color:var(--teal);margin-top:8px">Claude AI</span>
+      </div>
+      <div class="mod-tile" style="border-color:rgba(251,146,60,.25);grid-column:span 2" onclick="go('s-entrevistas');entTab('entrevista',null)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="mod-em" style="margin-bottom:0">🎯</div>
+          <div>
+            <div class="mod-name" id="m-ent">Entrevistas & Exámenes</div>
+            <div class="mod-sub" id="m-ent-s">Preparación para trabajar fuera · UK · IE · AU</div>
+          </div>
+        </div>
+        <div class="prog-mini" style="margin-top:10px"><div class="prog-mini-fill" style="width:0%;background:var(--coral)"></div></div>
+      </div>
     </div>
 
     <div class="sec" id="h-sec-test">Tests rápidos</div>
@@ -370,7 +392,11 @@ body{font-family:var(--fn);background:var(--bg);color:var(--tx);-webkit-font-smo
 
 <!-- FÁRMACO DETAIL -->
 <div id="s-drug" class="scr">
-  <div class="tb"><button class="back" id="drug-back" onclick="go('s-vadecumum')">‹</button><div class="tb-title" id="drug-tb"></div><button style="font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid rgba(45,212,160,.3);background:transparent;color:var(--teal);cursor:pointer;font-family:var(--fn)" onclick="evalDrug()">Evalúate ↗</button></div>
+  <div class="tb">
+    <button class="back" id="drug-back" onclick="go('s-vadecumum')">‹</button>
+    <div class="tb-title" id="drug-tb"></div>
+    <button style="font-size:12px;padding:7px 14px;border-radius:20px;border:1px solid rgba(45,212,160,.35);background:rgba(45,212,160,.1);color:var(--teal);cursor:pointer;font-family:var(--fn);font-weight:500;min-height:36px" onclick="evalDrug()">Evalúate ↗</button>
+  </div>
   <div id="drug-hero"></div>
   <div class="tabs">
     <div class="t-tab on" onclick="drugTab('ficha',this)">Ficha</div>
@@ -413,12 +439,47 @@ body{font-family:var(--fn);background:var(--bg);color:var(--tx);-webkit-font-smo
   <div class="pad" id="prog-body"></div>
 </div>
 
+<!-- ══════════════════════════════════════
+  IA TUTOR
+══════════════════════════════════════ -->
+<div id="s-ia" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title">🤖 Tutor IA</div><div></div></div>
+  <div style="padding:0 18px 100px">
+    <!-- Quick prompts -->
+    <div class="sec">Preguntas rápidas</div>
+    <div id="ia-chips" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px"></div>
+    <!-- Chat area -->
+    <div id="ia-chat" style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;min-height:200px"></div>
+    <!-- Input -->
+    <div style="position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);background:var(--bg);padding:10px 0">
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <textarea id="ia-input" rows="2" placeholder="Pregunta lo que quieras..." style="flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:14px;padding:11px 14px;font-size:14px;color:var(--tx);font-family:var(--fn);resize:none;outline:none;line-height:1.4"></textarea>
+        <button onclick="sendToAI()" id="ia-send" style="width:44px;height:44px;border-radius:50%;background:var(--teal);border:none;font-size:20px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  ENTREVISTAS & EXÁMENES
+══════════════════════════════════════ -->
+<div id="s-entrevistas" class="scr">
+  <div class="tb"><button class="back" onclick="go('s-home')">‹</button><div class="tb-title">🎯 Entrevistas & Exámenes</div><div></div></div>
+  <div class="tabs">
+    <div class="t-tab on" onclick="entTab('entrevista',this)">Entrevista</div>
+    <div class="t-tab" onclick="entTab('examen',this)">Examen clínico</div>
+    <div class="t-tab" onclick="entTab('triaje',this)">Triaje tel.</div>
+    <div class="t-tab" onclick="entTab('ingles',this)">Inglés clínico</div>
+  </div>
+  <div class="pad" id="ent-body"></div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bnav" id="bnav" style="display:none">
   <div class="ni on" onclick="go('s-home')" id="ni-0"><div class="ni-ic">🏠</div><div class="ni-lb" id="nl-0">Inicio</div></div>
   <div class="ni" onclick="go('s-urgencias')" id="ni-1"><div class="ni-ic">🚨</div><div class="ni-lb" id="nl-1">Urgencias</div></div>
   <div class="ni" onclick="go('s-anestesia')" id="ni-2"><div class="ni-ic">💉</div><div class="ni-lb" id="nl-2">Anestesia</div></div>
-  <div class="ni" onclick="go('s-ddx')" id="ni-3"><div class="ni-ic">🔍</div><div class="ni-lb" id="nl-3">DDx</div></div>
+  <div class="ni" onclick="go('s-ia');initIA()" id="ni-3"><div class="ni-ic">🤖</div><div class="ni-lb" id="nl-3">Tutor IA</div></div>
   <div class="ni" onclick="go('s-vadecumum')" id="ni-4"><div class="ni-ic">💊</div><div class="ni-lb" id="nl-4">Fármacos</div></div>
 </nav>
 
@@ -1471,6 +1532,305 @@ function renderProgreso() {
         <div style="width:10px;height:10px;border-radius:50%;background:${p.done?p.c:'var(--b2)'};flex-shrink:0;margin-top:4px"></div>
         <div><div style="font-size:11px;color:var(--tx3)">${p.ph}</div><div style="font-size:13px;font-weight:500;color:${p.done?p.c:'var(--tx)'}">${p.lb}</div></div>
       </div>`).join('')}`;
+}
+
+
+// ═══════════════════════════════════════
+//  PATCH GO — include new screens
+// ═══════════════════════════════════════
+const _goOriginal = window.go;
+window.go = function(id) {
+  document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  const navScreens = ['s-home','s-urgencias','s-anestesia','s-ia','s-vadecumum'];
+  const bnav = document.getElementById('bnav');
+  bnav.style.display = navScreens.includes(id) ? 'flex' : 'none';
+  document.querySelectorAll('.ni').forEach((n,i) => n.classList.toggle('on', navScreens[i]===id));
+  if (id==='s-urgencias') renderUrgencias();
+  if (id==='s-anestesia') aneTab('calc', document.querySelector('#s-anestesia .t-tab'));
+  if (id==='s-anatomia') renderAnatomy();
+  if (id==='s-vadecumum') renderVad();
+  if (id==='s-ddx') renderDdx();
+  if (id==='s-progreso') renderProgreso();
+};
+
+// ═══════════════════════════════════════
+//  IA TUTOR
+// ═══════════════════════════════════════
+let iaMessages = [];
+let iaInited = false;
+const IA_QUICK = {
+  es:['Explícame NMS vs NMI','Crea un caso de Cushing','Estadios ACVIM de ICC','Urgencia shock en gato','Test 5 preguntas cardiología','Protocolo status epilepticus'],
+  en:['Explain UMN vs LMN','Create a Cushing\'s case','ACVIM CHF staging','Shock emergency in cat','5 cardiology questions','Status epilepticus protocol']
+};
+
+function initIA() {
+  if (iaInited) return;
+  iaInited = true;
+  const chips = document.getElementById('ia-chips');
+  if (!chips) return;
+  chips.innerHTML = IA_QUICK[L].map(q =>
+    '<div class="chip" style="font-size:12px" onclick="iaQuick(this,\'' + q.replace(/'/g,"\\'") + '\')">' + q + '</div>'
+  ).join('');
+  appendIAMsg('ai', L==='es'
+    ? 'Hola. Soy tu tutor clínico. Puedo explicar conceptos, crear casos, hacerte tests o prepararte para entrevistas. ¿Qué trabajamos?'
+    : 'Hi! I\'m your clinical tutor. I can explain concepts, create cases, quiz you or prepare you for interviews. What shall we work on?');
+}
+
+function iaQuick(el, text) {
+  document.getElementById('ia-input').value = text;
+  sendToAI();
+}
+
+function appendIAMsg(role, text) {
+  const chat = document.getElementById('ia-chat');
+  if (!chat) return;
+  const isAI = role === 'ai';
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;align-items:flex-start;' + (isAI ? '' : 'flex-direction:row-reverse');
+  div.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:' + (isAI ? 'rgba(45,212,160,.15)' : 'rgba(255,255,255,.06)') + ';display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">' + (isAI ? '🤖' : '👤') + '</div><div style="max-width:85%;background:' + (isAI ? 'var(--bg3)' : 'var(--s2)') + ';border:1px solid ' + (isAI ? 'rgba(45,212,160,.15)' : 'var(--b1)') + ';border-radius:' + (isAI ? '4px 14px 14px 14px' : '14px 4px 14px 14px') + ';padding:11px 14px;font-size:14px;line-height:1.6;color:var(--tx)">' + text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>') + '</div>';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function appendLoading() {
+  const chat = document.getElementById('ia-chat');
+  if (!chat) return;
+  const div = document.createElement('div');
+  div.id = 'ia-loading';
+  div.style.cssText = 'display:flex;gap:8px;align-items:center';
+  div.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:rgba(45,212,160,.15);display:flex;align-items:center;justify-content:center;font-size:16px">🤖</div><div style="background:var(--bg3);border:1px solid rgba(45,212,160,.15);border-radius:4px 14px 14px 14px;padding:12px 16px"><div style="display:flex;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:var(--teal);animation:iabn 1s infinite 0s"></div><div style="width:7px;height:7px;border-radius:50%;background:var(--teal);animation:iabn 1s infinite .15s"></div><div style="width:7px;height:7px;border-radius:50%;background:var(--teal);animation:iabn 1s infinite .3s"></div></div></div>';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+const _ias = document.createElement('style');
+_ias.textContent = '@keyframes iabn{0%,80%,100%{transform:scale(0.6);opacity:.4}40%{transform:scale(1);opacity:1}}';
+document.head.appendChild(_ias);
+
+async function sendToAI() {
+  const input = document.getElementById('ia-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  appendIAMsg('user', text);
+  const sys = L==='es'
+    ? 'Eres un tutor clínico veterinario experto. Responde en español de forma concisa y clínica. Usa **negrita** para términos clave. Si creas casos clínicos, preséntalo estructurado. Si el usuario pide test, crea 4 opciones con respuesta correcta explicada. Máximo 300 palabras salvo que pidan más.'
+    : 'You are an expert veterinary clinical tutor. Reply concisely and clinically in English. Use **bold** for key terms. Structure clinical cases clearly. For quizzes, create 4-option questions with explanations. Max 300 words unless more is requested.';
+  iaMessages.push({role:'user',content:text});
+  appendLoading();
+  document.getElementById('ia-send').disabled = true;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:iaMessages})
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || (L==='es'?'Error al conectar.':'Connection error.');
+    document.getElementById('ia-loading')?.remove();
+    appendIAMsg('ai', reply);
+    iaMessages.push({role:'assistant',content:reply});
+    if (iaMessages.length > 20) iaMessages = iaMessages.slice(-20);
+  } catch(e) {
+    document.getElementById('ia-loading')?.remove();
+    appendIAMsg('ai', L==='es' ? 'No se pudo conectar. Comprueba internet.' : 'Could not connect. Check your internet.');
+  }
+  document.getElementById('ia-send').disabled = false;
+}
+
+document.getElementById('ia-input')?.addEventListener('keydown', e => {
+  if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendToAI(); }
+});
+
+// ═══════════════════════════════════════
+//  ENTREVISTAS
+// ═══════════════════════════════════════
+const ENT_DATA = {
+  entrevista:{
+    es:{intro:'Preguntas más frecuentes en entrevistas en UK, Irlanda y Australia con guía de respuesta y consejos.',sections:[
+      {title:'Competencia clínica',color:'#2dd4a0',qs:[
+        {q:'¿Cómo manejarías un paciente en shock?',guide:'A-B-C → acceso IV → fluidos (dar dosis exacta) → identificar causa → monitorización. Nombra el protocolo RECOVER. Menciona la comunicación con el propietario.',tips:['Usa A-B-C siempre como estructura','Cita RECOVER 2012','Trabaja en equipo con el técnico/enfermero']},
+        {q:'Describe tu enfoque ante un perro con cojera crónica',guide:'Historia clínica → examen estático y dinámico → localización → RX/TC → opciones médicas y quirúrgicas → seguimiento.',tips:['Muestra razonamiento sistemático','Menciona bienestar y calidad de vida','Habla de costes y opciones al propietario']},
+        {q:'¿Qué harías si sospechas maltrato animal?',guide:'Documentar hallazgos con objetividad. No acusar directamente. Seguir el protocolo del centro. Notificar a la autoridad competente (RSPCA en UK, DSPCA en Irlanda). Proteger al animal.',tips:['En UK: Animal Welfare Act 2006','Protocolo clínica primero, luego autoridades','Nunca confrontar al propietario directamente']},
+      ]},
+      {title:'Bienestar y ética',color:'#a78bfa',qs:[
+        {q:'Un propietario rechaza tratamiento necesario por coste. ¿Qué haces?',guide:'Explorar seguros y opciones de pago. Discutir alternativas. Si sufrimiento activo sin solución: eutanasia compasiva. Documentar todo.',tips:['Animal Welfare Act 2006 es tu respaldo legal','No juzgar al propietario','Rescates y ONGs como alternativa']},
+        {q:'Explica las Five Freedoms',guide:'1.Hambre/sed 2.Malestar 3.Dolor/enfermedad 4.Comportamiento normal 5.Miedo/estrés. Ahora actualizado al Five Domains model (2020).',tips:['Menciona Five Domains como evolución moderna','Aplícalo a un ejemplo de consulta real','Demuestra que lo vives, no solo lo recitas']},
+      ]},
+      {title:'Preguntas sobre ti',color:'#5b9cf6',qs:[
+        {q:'¿Por qué quieres trabajar aquí?',guide:'Investiga la clínica antes: especialidades, filosofía, tamaño, reputación. Menciona algo específico. Habla de tu plan de desarrollo profesional.',tips:['Investiga la clínica — demuéstralo','Menciona el RCVS y sus estándares','Sé honesto sobre tus objetivos a largo plazo']},
+        {q:'¿Cuál es tu mayor debilidad clínica?',guide:'Sé específico y honesto. Muestra qué estás haciendo para mejorar. Ejemplo: "Me costaba la interpretación de ECG — he estado estudiando cardiología sistemáticamente."',tips:['Nunca digas que no tienes debilidades','Termina siempre en positivo con tu plan de mejora','Muestra autoconciencia y ganas de aprender']},
+      ]},
+    ]},
+    en:{intro:'Most common questions in UK, Ireland and Australia veterinary interviews with answer guides.',sections:[
+      {title:'Clinical competency',color:'#2dd4a0',qs:[
+        {q:'How would you manage a patient in shock?',guide:'A-B-C → IV access → fluid therapy (give exact dose) → identify cause → monitoring. Reference RECOVER protocol. Mention owner communication.',tips:['Always use A-B-C as structure','Cite RECOVER 2012','Work as a team with the nurse']},
+        {q:'Describe your approach to chronic lameness',guide:'Detailed history → static and dynamic exam → localisation → X-ray/CT → medical and surgical options → follow-up.',tips:['Show systematic reasoning','Mention welfare and quality of life','Discuss costs and options with owner']},
+      ]},
+      {title:'Welfare and ethics',color:'#a78bfa',qs:[
+        {q:'Owner refuses treatment due to cost — what do you do?',guide:'Explore insurance and payment options. Discuss alternatives. If active suffering with no solution: compassionate euthanasia. Document everything.',tips:['Animal Welfare Act 2006 is your legal backing','Don\'t judge the owner','Charities and rescues as an alternative']},
+        {q:'Explain the Five Freedoms',guide:'1.Hunger/thirst 2.Discomfort 3.Pain/disease 4.Normal behaviour 5.Fear/distress. Now updated to Five Domains model (2020).',tips:['Mention Five Domains as modern evolution','Apply to a real consultation example']},
+      ]},
+    ]}
+  },
+  examen:{
+    es:{intro:'Casos tipo OSCE y exámenes de colegio. Responde antes de ver la respuesta.',cases:[
+      {title:'OSCE 1 — Urgencias',level:'Nivel medio',color:'#ff5777',scenario:'Labrador 6 años, 32kg. Vómitos y diarrea hemorrágica 6h. Posible ingesta basura. Mucosas pálido-rosadas, TRC 2.5s, FC 120 lpm, T 38.9°C.',questions:[
+        {q:'3 diagnósticos diferenciales prioritarios',a:'1. GEH/HGE (gastroenteritis hemorrágica aguda). 2. Parvovirus (si vacunación dudosa). 3. Intoxicación/cuerpo extraño. Descartar: coagulopatía, invaginación.'},
+        {q:'3 pruebas diagnósticas inmediatas',a:'1. Test rápido Parvovirus. 2. Hemograma + bioquímica + ionograma. 3. RX abdomen (descartar obstrucción).'},
+        {q:'Plan de tratamiento inicial',a:'IV + Ringer Lactato (mantenimiento + déficit). Maropitant 1 mg/kg IV. Ayuno 12-24h. Si infeccioso: amoxicilina-clavulánico. Monitorización electrolitos.'},
+      ]},
+      {title:'OSCE 2 — Consulta rutina',level:'Nivel básico',color:'#f5a623',scenario:'Gato europeo 10 años, revisión anual. Pérdida 600g vs año anterior. Propietario: "come mucho pero no engorda".',questions:[
+        {q:'Diagnósticos diferenciales antes de explorar',a:'1. Hipertiroidismo felino (más probable >8 años + polifagia + pérdida peso). 2. Diabetes mellitus. 3. IRC. 4. Linfoma intestinal. 5. EII.'},
+        {q:'Exploración dirigida: ¿qué buscas?',a:'Palpación tiroides bilateral (nódulo). FC y auscultación (taquicardia, soplo). BCS. PA (HTA frecuente). Palpación abdominal.'},
+        {q:'Analítica: ¿qué pides y por qué?',a:'T4 total (diagnóstico HiperT). Bioquímica + función renal (IRC enmascarada). Hemograma. Urianálisis. PA.'},
+      ]},
+    ]},
+    en:{intro:'OSCE-style clinical cases. Answer mentally before revealing.',cases:[
+      {title:'OSCE 1 — Emergency',level:'Intermediate',color:'#ff5777',scenario:'6-year-old Labrador, 32kg. Bloody vomiting and diarrhoea for 6h. Possible rubbish ingestion. Pale-pink mucosas, CRT 2.5s, HR 120 bpm, T 38.9°C.',questions:[
+        {q:'Top 3 differential diagnoses',a:'1. HGE (haemorrhagic gastroenteritis). 2. Parvovirus (if vaccination history unclear). 3. Toxin/foreign body. Rule out: coagulopathy, intussusception.'},
+        {q:'First 3 diagnostic tests',a:'1. Rapid Parvovirus test. 2. CBC + biochemistry + electrolytes. 3. Abdominal X-ray.'},
+      ]},
+    ]}
+  },
+  triaje:{
+    es:{intro:'Habilidad clave en entrevistas de clínica general. Aprende qué preguntar y cómo priorizar.',levels:[
+      {name:'Urgencia inmediata 🔴',color:'#ff5777',desc:'<15 min',casos:['Disnea grave / cianosis','Convulsión activa >5 min','Hemorragia no controlada','Colapso / pérdida de consciencia','Atropello / trauma grave','Gato macho sin orinar >12h','Distensión abdominal aguda perro grande']},
+      {name:'Urgente 🟡',color:'#f5a623',desc:'2–4 horas',casos:['Vómitos >3 veces en pocas horas','Diarrea hemorrágica sin letargia','Cojera sin apoyo, aguda','Ojo rojo doloroso / protrusión','Mordedura profunda','Ingesta tóxico <2 horas']},
+      {name:'Consulta ordinaria 🟢',color:'#2dd4a0',desc:'24–48h',casos:['Prurito sin autolesión grave','Cojera leve con apoyo','Anorexia 24h sin más signos','Tos esporádica sin disnea']},
+    ],preguntas:[
+      {p:'¿Está consciente y respira con normalidad?',why:'Identifica emergencias vitales inmediatas'},
+      {p:'¿Hay hemorragia? ¿Se puede controlar con presión?',why:'Evalúa shock hemorrágico'},
+      {p:'¿Cuánto tiempo lleva así? ¿Ha empeorado rápido?',why:'Velocidad de progresión cambia la urgencia'},
+      {p:'¿Puede andar y moverse con normalidad?',why:'Estado neurológico y locomotor básico'},
+      {p:'¿Ha comido algo inusual en las últimas horas?',why:'Descarta intoxicación o cuerpo extraño'},
+      {p:'¿Es gato macho que no orina? ¿Cuántas horas?',why:'Obstrucción urinaria: siempre urgencia'},
+    ]},
+    en:{intro:'Key skill in general practice interviews. Learn what to ask and how to prioritise.',levels:[
+      {name:'Immediate emergency 🔴',color:'#ff5777',desc:'<15 min',casos:['Severe dyspnoea / cyanosis','Active seizure >5 min','Uncontrolled bleeding','Collapse / loss of consciousness','Road traffic accident','Male cat not urinating >12h','Acute abdominal distension large dog']},
+      {name:'Urgent 🟡',color:'#f5a623',desc:'2–4 hours',casos:['Vomiting >3 times','Bloody diarrhoea','Acute non-weight-bearing lameness','Painful red eye','Deep bite wound','Toxin ingestion <2h']},
+      {name:'Routine 🟢',color:'#2dd4a0',desc:'24–48h',casos:['Mild pruritus','Mild lameness weight-bearing','Reduced appetite 24h','Occasional cough']},
+    ],preguntas:[
+      {p:'Is the pet conscious and breathing normally?',why:'Identifies immediate life-threatening emergency'},
+      {p:'Is there active bleeding? Can it be controlled?',why:'Assesses haemorrhagic shock'},
+      {p:'How long has this been going on? Worsening fast?',why:'Rate of progression changes urgency'},
+      {p:'Can they walk and move normally?',why:'Basic neurological and locomotor check'},
+      {p:'Have they eaten anything unusual recently?',why:'Rules out toxin or foreign body'},
+    ]}
+  },
+  ingles:{
+    es:{intro:'Vocabulario y frases esenciales para trabajar en una clínica anglosajona.',sections:[
+      {title:'Anamnesis y consulta',color:'#5b9cf6',items:[
+        {en:'What brings you in today?',es:'¿Qué le trae hoy?',pron:'Wot bringz yu in tudéi?'},
+        {en:'How long has this been going on?',es:'¿Cuánto tiempo lleva así?',pron:'Jau long jaz dhis bin góing on?'},
+        {en:'Any vomiting or diarrhoea?',es:'¿Vómitos o diarrea?',pron:'Éni vómiting or daiería?'},
+        {en:'Is your pet up to date with vaccinations?',es:'¿Vacunas al día?',pron:'Is yor pet ap tu déit uid vaksinéishons?'},
+        {en:'Is your pet insured?',es:'¿Tiene seguro?',pron:'Is yor pet inshúrd?'},
+      ]},
+      {title:'Exploración y diagnóstico',color:'#2dd4a0',items:[
+        {en:"I'm going to take their temperature",es:'Voy a tomarle la temperatura',pron:"Aim góing tu téik dher témpricher"},
+        {en:'There\'s a grade III heart murmur',es:'Hay un soplo grado III',pron:'Dherz a gréid thri jart múrmur'},
+        {en:"I'd like to run some bloodwork",es:'Me gustaría hacer analítica',pron:"Aid laik tu ran sam blúdwork"},
+        {en:'We need to take some X-rays',es:'Necesitamos radiografías',pron:'Wi nid tu téik sam éks-reiz'},
+        {en:'The lymph nodes are enlarged',es:'Los nódulos están aumentados',pron:'Dha limf nódz ar enlárjd'},
+      ]},
+      {title:'Resultados y opciones',color:'#f5a623',items:[
+        {en:'The results show...',es:'Los resultados muestran...',pron:'Dha rizálts shou...'},
+        {en:"I'm concerned about...",es:'Me preocupa...',pron:"Aim konsérnd abáut..."},
+        {en:'We have a few options',es:'Tenemos varias opciones',pron:'Wi jav a fiu óptions'},
+        {en:"I'd like to refer you to a specialist",es:'Me gustaría derivarle',pron:"Aid laik tu rifér yu tu a spéshalist"},
+        {en:"I'll send you a written estimate",es:'Le enviaré presupuesto escrito',pron:"Ail send yu a ríten éstimit"},
+      ]},
+      {title:'Urgencias e ingreso',color:'#ff5777',items:[
+        {en:'Your pet needs emergency treatment',es:'Su mascota necesita atención urgente',pron:'Yor pet nidz imérjensi trítment'},
+        {en:"We'd like to keep them in overnight",es:'Nos gustaría tenerle ingresado esta noche',pron:"Wid laik tu kip dhem in óuvernait"},
+        {en:"I'll call you with an update this evening",es:'Le llamaré esta tarde con novedades',pron:"Ail kol yu uid an ápdeit dhis ívning"},
+        {en:'Is there anything else you\'d like to ask?',es:'¿Tiene alguna otra pregunta?',pron:'Is dher énidhing els yud laik tu ask?'},
+      ]},
+    ]},
+    en:{intro:'Essential phrases for working in an English-speaking practice — with Spanish reference.',sections:[
+      {title:'Consultation',color:'#5b9cf6',items:[
+        {en:'What brings you in today?',es:'Core opening — always start here',pron:'Shows empathy immediately'},
+        {en:'How long has this been going on?',es:'Duration of complaint',pron:'Critical for DDx'},
+        {en:'Is your pet insured?',es:'Establishes financial context early',pron:'Ask before discussing costs'},
+      ]}
+    ]}
+  }
+};
+
+function entTab(tab, el) {
+  document.querySelectorAll('#s-entrevistas .t-tab').forEach(t => t.classList.remove('on'));
+  if (el) el.classList.add('on');
+  else { const tabs=document.querySelectorAll('#s-entrevistas .t-tab'); const idx=['entrevista','examen','triaje','ingles'].indexOf(tab); if(tabs[idx]) tabs[idx].classList.add('on'); }
+  const body = document.getElementById('ent-body');
+  const d = ENT_DATA[tab]?.[L] || ENT_DATA[tab]?.es;
+  if (!d || !body) return;
+
+  if (tab==='entrevista') {
+    body.innerHTML = '<div style="font-size:14px;color:var(--tx2);line-height:1.6;margin-bottom:18px">'+d.intro+'</div>' +
+      d.sections.map((sec,si) => '<div style="margin-bottom:20px"><div style="font-size:12px;font-weight:600;color:'+sec.color+';text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">'+sec.title+'</div>' +
+        sec.qs.map((q,qi) => '<div class="card" onclick="toggleEnt(\'ent'+si+'_'+qi+'\')">' +
+          '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="font-size:14px;font-weight:500;line-height:1.4;flex:1">❓ '+q.q+'</div><span id="enarr'+si+'_'+qi+'" style="color:var(--tx3);font-size:18px;flex-shrink:0">›</span></div>' +
+          '<div class="expand-body" id="ent'+si+'_'+qi+'">' +
+          '<div style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:10px">'+q.guide+'</div>' +
+          '<div style="font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Consejos clave</div>' +
+          q.tips.map(tip => '<div style="font-size:12px;color:'+sec.color+';margin-bottom:4px;display:flex;gap:6px"><span>✓</span>'+tip+'</div>').join('') +
+          '<button onclick="event.stopPropagation();practiceInterview(\''+q.q.replace(/'/g,"\\'")+'\')" style="margin-top:10px;width:100%;background:var(--tdim);border:1px solid rgba(45,212,160,.25);border-radius:50px;padding:10px;font-size:12px;font-weight:500;color:var(--teal);cursor:pointer;font-family:var(--fn)">🤖 Practicar con IA ↗</button>' +
+          '</div></div>').join('') + '</div>').join('');
+  } else if (tab==='examen') {
+    body.innerHTML = '<div style="font-size:14px;color:var(--tx2);line-height:1.6;margin-bottom:18px">'+d.intro+'</div>' +
+      d.cases.map((c,ci) => '<div style="margin-bottom:24px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-family:var(--fs);font-size:16px;color:'+c.color+'">'+c.title+'</div><span style="font-size:11px;padding:3px 9px;border-radius:20px;background:'+c.color+'22;color:'+c.color+'">'+c.level+'</span></div>' +
+        '<div style="background:var(--s2);border:1px solid var(--b1);border-left:3px solid '+c.color+';border-radius:var(--rs);padding:13px;font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:12px">'+c.scenario+'</div>' +
+        c.questions.map((q,qi) => '<div class="card" onclick="toggleEnt(\'osce'+ci+'_'+qi+'\')">' +
+          '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div style="font-size:13px;font-weight:500;flex:1">P'+(qi+1)+': '+q.q+'</div><span id="osarr'+ci+'_'+qi+'" style="color:var(--tx3);font-size:18px;flex-shrink:0">›</span></div>' +
+          '<div class="expand-body" id="osce'+ci+'_'+qi+'"><div style="font-size:12px;color:var(--teal);background:var(--tdim);border-radius:var(--rx);padding:10px;line-height:1.6;margin-top:4px">'+q.a+'</div></div>' +
+          '</div>').join('') + '</div>').join('') +
+      '<button onclick="generateOSCE()" style="width:100%;background:linear-gradient(135deg,rgba(45,212,160,.12),rgba(91,156,246,.08));border:1px solid rgba(45,212,160,.3);border-radius:50px;padding:13px;font-size:14px;font-weight:500;color:var(--teal);cursor:pointer;font-family:var(--fn);margin-top:8px">🤖 Generar caso OSCE con IA ↗</button>';
+  } else if (tab==='triaje') {
+    body.innerHTML = '<div style="font-size:14px;color:var(--tx2);line-height:1.6;margin-bottom:18px">'+d.intro+'</div>' +
+      d.levels.map(lv => '<div style="background:var(--s1);border:1px solid var(--b1);border-left:3px solid '+lv.color+';border-radius:var(--r);padding:14px;margin-bottom:10px">' +
+        '<div style="font-size:14px;font-weight:500;color:'+lv.color+';margin-bottom:4px">'+lv.name+'</div>' +
+        '<div style="font-size:11px;color:var(--tx3);margin-bottom:8px">→ '+lv.desc+'</div>' +
+        lv.casos.map(c => '<div style="font-size:12px;color:var(--tx2);display:flex;gap:6px;margin-bottom:3px"><span style="color:'+lv.color+'">·</span>'+c+'</div>').join('') +
+        '</div>').join('') +
+      '<div class="sec">Preguntas clave de triaje</div>' +
+      d.preguntas.map((p,i) => '<div class="card"><div style="font-size:14px;font-weight:500;margin-bottom:5px">'+(i+1)+'. "'+p.p+'"</div><div style="font-size:12px;color:var(--teal)">→ '+p.why+'</div></div>').join('') +
+      '<button onclick="practiceTriage()" style="width:100%;background:var(--rdim);border:1px solid rgba(255,87,119,.25);border-radius:50px;padding:13px;font-size:14px;font-weight:500;color:var(--red);cursor:pointer;font-family:var(--fn);margin-top:8px">🚨 Simular llamada con IA ↗</button>';
+  } else if (tab==='ingles') {
+    body.innerHTML = '<div style="font-size:14px;color:var(--tx2);line-height:1.6;margin-bottom:18px">'+d.intro+'</div>' +
+      d.sections.map(sec => '<div style="margin-bottom:20px"><div style="font-size:11px;font-weight:600;color:'+sec.color+';text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">'+sec.title+'</div>' +
+        sec.items.map(item => '<div class="card" style="padding:12px 14px"><div style="font-size:14px;font-weight:500;color:var(--tx);margin-bottom:3px">'+item.en+'</div><div style="font-size:12px;color:var(--tx2);margin-bottom:5px">'+item.es+'</div><div style="font-size:11px;font-family:var(--fm);color:var(--tx3);background:var(--s2);border-radius:var(--rx);padding:4px 8px;display:inline-block">'+item.pron+'</div></div>').join('') +
+        '</div>').join('') +
+      '<button onclick="practiceEnglish()" style="width:100%;background:var(--bdim);border:1px solid rgba(91,156,246,.3);border-radius:50px;padding:13px;font-size:14px;font-weight:500;color:var(--blue);cursor:pointer;font-family:var(--fn);margin-top:8px">🤖 Consulta en inglés con IA ↗</button>';
+  }
+}
+
+function toggleEnt(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+
+function practiceInterview(q) {
+  document.getElementById('ia-input').value = (L==='es' ? 'Simula que eres el entrevistador y hazme esta pregunta. Evalúa mi respuesta cuando te la dé: ' : 'Act as an interviewer and ask me this question. Evaluate my answer when I give it: ') + '"' + q + '"';
+  window.go('s-ia'); initIA(); sendToAI();
+}
+function generateOSCE() {
+  document.getElementById('ia-input').value = L==='es'
+    ? 'Genera un caso OSCE de nivel intermedio. Incluye: especie, edad, motivo de consulta, hallazgos exploratorios clave y 3 preguntas con respuestas.'
+    : 'Generate an intermediate OSCE case: species, age, presenting complaint, key exam findings, 3 questions with answers.';
+  window.go('s-ia'); initIA(); sendToAI();
+}
+function practiceTriage() {
+  document.getElementById('ia-input').value = L==='es'
+    ? 'Simula una llamada de triaje. Tú eres el propietario preocupado, yo el veterinario. Empieza con el problema sin decirme el diagnóstico.'
+    : 'Simulate a triage call. You are the worried owner, I am the vet. Start with the problem without revealing the diagnosis.';
+  window.go('s-ia'); initIA(); sendToAI();
+}
+function practiceEnglish() {
+  document.getElementById('ia-input').value = "Let's practice a vet consultation in English. Play the role of a client with an 8-year-old cat that has lost weight and is eating more. I'll be the vet. Start.";
+  window.go('s-ia'); initIA(); sendToAI();
 }
 
 // INIT
